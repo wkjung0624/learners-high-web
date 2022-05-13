@@ -38,3 +38,6 @@ out/
 
 ### Otter Custom ###
 Pages/
+#!domain/
+#!global/
+#!infra/
