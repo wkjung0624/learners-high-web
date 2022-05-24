@@ -25,19 +25,19 @@ public class UserRegisterApi {
 		return memberService.save(memberSaveRequestDto);
 	}
 
-	/** 회원 가입 전 이메일 중복 확인
+	/** [√] 회원 가입 전 이메일 중복 확인
 	 * 테스트 데이터
 	 * c2t5c2hpcDM2QGdtYWlsLmNvbQ==
 	 * skyship36@gmail.com
 	 // TODO : 이메일 형식인지 정규표현식 검사
 	 // TODO : 이메일이 존재한다면 OK Json
 	 // TODO : 이메일이 존재하지 않다면 Error Json
-	 * @param address
+	 * @param email
 	 * @return
 	 */
-	@GetMapping("/register/email/duplicated/")
-	public String checkDuplicatedEmail(@RequestParam(required = true) String address) {
-		return memberService.findByEmail(address);
+	@GetMapping("/register/email/duplicated")
+	public boolean checkDuplicatedEmail(@RequestParam(required = true) String email) {
+		return !memberService.findByEmail(email).isEmpty();
 	}
 
 	/** 회원 가입한 유저에게 이메일 인증 요청
