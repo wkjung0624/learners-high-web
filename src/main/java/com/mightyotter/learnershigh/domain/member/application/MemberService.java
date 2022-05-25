@@ -2,7 +2,7 @@ package com.mightyotter.learnershigh.domain.member.application;
 
 import com.mightyotter.learnershigh.domain.member.dao.Member;
 import com.mightyotter.learnershigh.domain.member.dao.MemberRepository;
-import com.mightyotter.learnershigh.domain.member.dto.MemberSaveRequestDto;
+import com.mightyotter.learnershigh.domain.member.dto.MemberCreateRequestDto;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +15,14 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 
 	@Transactional
-	public Long save(MemberSaveRequestDto memberSaveRequestDto){
+	public Long save(MemberCreateRequestDto memberSaveRequestDto){
 		return memberRepository.save(memberSaveRequestDto.toEntity()).getId();
 	}
 
 	public List<Member> findByEmail(String email){
 		return memberRepository.findByEmail(email);
 	}
-
+	public List<Member> findByUserId(String userId){
+		return memberRepository.findByUserId(userId);
+	}
 }
