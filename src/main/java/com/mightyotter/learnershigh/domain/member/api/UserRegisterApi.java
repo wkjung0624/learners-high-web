@@ -1,8 +1,9 @@
 package com.mightyotter.learnershigh.domain.member.api;
 
 import com.mightyotter.learnershigh.domain.member.application.MemberService;
-import com.mightyotter.learnershigh.domain.member.dto.MemberSaveRequestDto;
+import com.mightyotter.learnershigh.domain.member.dto.MemberCreateRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 // private final 을 사용하기 위해 @RequiredArgsConstructor 를 쓰는 이유는?
 @RequiredArgsConstructor
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1")
 public class UserRegisterApi {
@@ -21,8 +23,14 @@ public class UserRegisterApi {
 
 	/** [√] 유저가 입력한 정보로 임시회원가입 */
 	@PostMapping("/register")
-	public Long createUserAccount(@RequestBody(required = true) MemberSaveRequestDto memberSaveRequestDto){
-		return memberService.save(memberSaveRequestDto);
+	public Long createUserAccount(@RequestBody(required = true) MemberCreateRequestDto memberCreateRequestDto){
+		return memberService.save(memberCreateRequestDto);
+	}
+
+	/** 회원 가입 전 아이디 중복 확인 */
+	@GetMapping("/register/id/duplicate")
+	public boolean checkIdDuplication(@RequestParam(required = true) String userId) {
+		return !memberService.findByUserId(userId).isEmpty();
 	}
 
 	/** [√] 회원 가입 전 이메일 중복 확인
@@ -35,8 +43,8 @@ public class UserRegisterApi {
 	 * @param email
 	 * @return
 	 */
-	@GetMapping("/register/email/duplicated")
-	public boolean checkDuplicatedEmail(@RequestParam(required = true) String email) {
+	@GetMapping("/register/email/duplicate")
+	public boolean checkEmailDuplication(@RequestParam(required = true) String email) {
 		return !memberService.findByEmail(email).isEmpty();
 	}
 
@@ -49,9 +57,7 @@ public class UserRegisterApi {
 	 * @return
 	 */
 	@GetMapping("/register/email/challange") // base64encoded email
-	public Object sendEmailChallenge(@RequestParam(required = true) String address) {
-		return null;
-	}
+	public void sendEmailChallenge(@RequestParam(required = true) String address) {/*...*/}
 
 	/** 이메일 인증 링크 클릭시 검증하는 메소드
 	 * 메일 인증만 예외적으로 GET 을 허용
@@ -60,9 +66,7 @@ public class UserRegisterApi {
 	 * @return
 	 */
 	@GetMapping("/register/email/challange-accept/") // /dup../?address=
-	public String receiveEmailChallangeAccept(@RequestParam(required = true) String key) {
-		return "this is mock ";
-	}
+	public void receiveEmailChallangeAccept(@RequestParam(required = true) String key) {/*...*/}
 
 	/** SMS 인증 API, 현재는 e-mail 인증 기능 개발 우선
 		//휴대폰 인증 요청
