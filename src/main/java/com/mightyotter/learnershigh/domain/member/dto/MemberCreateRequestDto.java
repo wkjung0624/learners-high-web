@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
-public class MemberSaveRequestDto {
+public class MemberCreateRequestDto {
 	@NotNull
 	private final String userId;
 	@NotNull
@@ -21,7 +21,7 @@ public class MemberSaveRequestDto {
 	private final String email;
 
 	@Builder
-	public MemberSaveRequestDto(String userId, String userPw, String nickName, String email){
+	public MemberCreateRequestDto(String userId, String userPw, String nickName, String email){
 		this.userId = userId;
 		this.userPw = userPw;
 		this.nickName = nickName;
