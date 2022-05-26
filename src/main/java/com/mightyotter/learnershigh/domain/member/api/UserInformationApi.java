@@ -2,8 +2,12 @@ package com.mightyotter.learnershigh.domain.member.api;
 
 import com.mightyotter.learnershigh.domain.member.application.MemberService;
 import com.mightyotter.learnershigh.domain.member.dao.Member;
+import com.mightyotter.learnershigh.domain.member.dto.MemberLoginRequestDto;
+import com.mightyotter.learnershigh.domain.member.dto.MemberLoginResponseDto;
 import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,12 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1")
 public class UserInformationApi {
 
 	private final MemberService memberService;
+
+	/** 사용자 로그인 */
+	@PostMapping("/user")
+	public List<Member> getUserAccount(@RequestBody @Valid MemberLoginRequestDto memberLoginRequestDto){
+		return memberService.findByUserIdAndUserPw(memberLoginRequestDto);
+	}
 
 	/** 사용자 계정 찾기
 	 * 계정 찾기 이름과 주민번호를 이용하는건 X (고유식별정보 처리 근거가 부족함) 메일에 확인 클릭 시 비밀번호 초기화가 가능함 비밀번호를 직접적으로 알려주는건 X
