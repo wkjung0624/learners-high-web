@@ -4,7 +4,6 @@ import com.mightyotter.learnershigh.domain.member.dao.Member;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
-import lombok.Getter;
 
 public class MemberCreateRequestDto {
 	@NotNull
@@ -16,7 +15,6 @@ public class MemberCreateRequestDto {
 	private final String nickName;
 
 	@Email
-	@Getter
 	@NotNull
 	private final String email;
 
