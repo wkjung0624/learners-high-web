@@ -4,6 +4,7 @@ import com.mightyotter.learnershigh.domain.member.dao.Member;
 import com.mightyotter.learnershigh.domain.member.dao.MemberRepository;
 import com.mightyotter.learnershigh.domain.member.dto.MemberCreateRequestDto;
 
+import com.mightyotter.learnershigh.domain.member.dto.MemberLoginRequestDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,10 @@ public class MemberService {
 		return memberRepository.save(memberSaveRequestDto.toEntity()).getId();
 	}
 
+	public List<Member> findByUserIdAndUserPw(MemberLoginRequestDto memberLoginRequestDto) {
+		return memberRepository.findByUserIdAndUserPw(memberLoginRequestDto.getUserId(),
+			memberLoginRequestDto.getUserPw());
+	}
 	public List<Member> findByEmail(String email){
 		return memberRepository.findByEmail(email);
 	}
