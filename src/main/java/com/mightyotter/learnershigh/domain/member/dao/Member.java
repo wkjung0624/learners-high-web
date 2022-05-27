@@ -1,5 +1,6 @@
 package com.mightyotter.learnershigh.domain.member.dao;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,23 +28,23 @@ public class Member {
 	private Long id;
 
 	@Length(min = 6, max = 30)
-	@Column(length = 30, nullable = false)
+	@Column(length = 30, unique = true, nullable = false)
 	private String userId;
 
-	@Column(columnDefinition = "TEXT", nullable = false)
+	@Length(min = 64, max = 64)
+	@Column(nullable = false)
 	private String userPw;
 
-	@Column(columnDefinition = "TEXT", nullable = false)
+	@Column(nullable = false)
 	private String nickName;
 
-	@Column(columnDefinition = "TEXT", nullable = false)
+	@Column(unique = true, nullable = false)
 	private String email;
 
+	// JPA 에서는 SQL 의 Trigger 기능을 어떻게 구현하나?
+	// 이메일으 변경할 시 'verifiedEmail' 의 값은 false 로 강제되야함
 	@Column(nullable = false)
 	private boolean verifiedEmail;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date accountDeletionRequestDate;
 
 	@Builder
 	public Member(String userId, String userPw, String nickName, String email, Boolean verifiedEmail){
