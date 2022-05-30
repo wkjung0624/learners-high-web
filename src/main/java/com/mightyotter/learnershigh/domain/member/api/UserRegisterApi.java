@@ -1,8 +1,10 @@
 package com.mightyotter.learnershigh.domain.member.api;
 
 import com.mightyotter.learnershigh.domain.member.application.MemberService;
-import com.mightyotter.learnershigh.domain.member.dto.MemberCreateRequestDto;
+import com.mightyotter.learnershigh.domain.member.dto.request.MemberCreateRequestDto;
+import com.mightyotter.learnershigh.domain.member.dto.request.MemberDeleteRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,20 +19,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1")
 public class UserRegisterApi {
-
+	// User 파트에서 'Create' 와 'Delete' 를 담당
 	// private final 인 이유는?
 	private final MemberService memberService;
 
-	/** [√] 유저가 입력한 정보로 임시회원가입 */
+	/** [√] 유저가 입력한 정보로 임시 회원가입 */
 	@PostMapping("/register")
-	public Long createUserAccount(@RequestBody(required = true) MemberCreateRequestDto memberCreateRequestDto){
+	public Long createUserAccount(@RequestBody MemberCreateRequestDto memberCreateRequestDto){
 		return memberService.save(memberCreateRequestDto);
 	}
 
-	/** 회원 가입 전 아이디 중복 확인 */
+	/** [√] 사용자 계정 삭제하기
+	 * 1. 30일 간 보관 후 삭제
+	 * 2. 가입 시 입력했던 이메일로 삭제 조치 안내 메일 전송
+	 * 3. 30일 이후 배치 스크립트가 자동으로 '삭제된 계정 DB' 로 백업 후 '원본 DB'에서 삭제
+	 */
+	@PostMapping("/register/delete")
+	public ResponseEntity<Boolean> deleteUserAccount(@RequestBody MemberDeleteRequestDto memberDeleteRequestDto) {
+		return ResponseEntity.ok().body(memberService.delete(memberDeleteRequestDto));
+	}
+
+	/** [√] 회원 가입 전 아이디 중복 확인 */
 	@GetMapping("/register/id/duplicate")
 	public boolean checkIdDuplication(@RequestParam(required = true) String userId) {
-		return !memberService.findByUserId(userId).isEmpty();
+		return memberService.findOneByUserId(userId) != null;
 	}
 
 	/** [√] 회원 가입 전 이메일 중복 확인
@@ -45,7 +57,7 @@ public class UserRegisterApi {
 	 */
 	@GetMapping("/register/email/duplicate")
 	public boolean checkEmailDuplication(@RequestParam(required = true) String email) {
-		return !memberService.findByEmail(email).isEmpty();
+		return memberService.findOneByEmail(email) != null;
 	}
 
 	/** 회원 가입한 유저에게 이메일 인증 요청
