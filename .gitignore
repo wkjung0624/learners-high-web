@@ -36,8 +36,3 @@ out/
 ### VS Code ###
 .vscode/
 
-### Otter Custom ###
-Pages/
-#!domain/
-#!global/
-#!infra/
