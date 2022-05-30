@@ -1,28 +1,28 @@
 package com.mightyotter.learnershigh.domain.member.dao;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import com.mightyotter.learnershigh.global.common.entity.BaseTimeEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data //(@Getter 와 @Setter 를 합친 것 )
+@Getter
+@Setter
+//@Data //(@Getter 와 @Setter 를 합친 것 )
 @Entity
 @Table(name = "TBL_MEMBER")
-public class Member {
+public class Member extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
