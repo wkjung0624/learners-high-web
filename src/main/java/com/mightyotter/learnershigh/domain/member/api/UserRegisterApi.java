@@ -1,8 +1,8 @@
 package com.mightyotter.learnershigh.domain.member.api;
 
 import com.mightyotter.learnershigh.domain.member.application.MemberService;
-import com.mightyotter.learnershigh.domain.member.dto.request.MemberCreateRequestDto;
-import com.mightyotter.learnershigh.domain.member.dto.request.MemberDeleteRequestDto;
+import com.mightyotter.learnershigh.domain.member.dto.MemberDeleteRequestDto;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,8 +25,9 @@ public class UserRegisterApi {
 
 	/** [√] 유저가 입력한 정보로 임시 회원가입 */
 	@PostMapping("/register")
-	public Long createUserAccount(@RequestBody MemberCreateRequestDto memberCreateRequestDto){
-		return memberService.save(memberCreateRequestDto);
+	public ResponseEntity<Map<String, String>> createUserAccount(@RequestBody Map<String, String> requestBody){
+		return ResponseEntity.ok().body(
+			memberService.save(requestBody.get("userId"),requestBody.get("userPw"),requestBody.get("nickName"),requestBody.get("email")));
 	}
 
 	/** [√] 사용자 계정 삭제하기

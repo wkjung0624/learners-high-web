@@ -4,10 +4,6 @@ import java.util.Map;
 import java.util.HashMap;
 import com.mightyotter.learnershigh.domain.member.application.MemberService;
 import com.mightyotter.learnershigh.domain.member.dao.Member;
-import com.mightyotter.learnershigh.domain.member.dto.request.MemberCreateRequestDto;
-import com.mightyotter.learnershigh.domain.member.dto.request.MemberLoginRequestDto;
-import com.mightyotter.learnershigh.domain.member.dto.request.MemberUpdateRequestDto;
-import com.mightyotter.learnershigh.domain.member.dto.response.MemberLoginResponseDto;
 
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,16 +25,27 @@ public class UserInformationApi {
 
 	/** [x] 사용자 로그인 */
 	@PostMapping("/user")
-	public MemberLoginResponseDto getUserAccount(@RequestBody @Valid MemberLoginRequestDto memberLoginRequestDto){
+	public Map<String, String> getUserAccount(@RequestBody @Valid Map<String, String> requestBody){
 		// TODO : Spring Session ID 를 참고해야함
-		Member member = memberService.findOneByUserIdAndUserPw(memberLoginRequestDto.getUserId(),
-			memberLoginRequestDto.getUserPw());
 
-		if (member != null) {
-			return new MemberLoginResponseDto("uuid-session", member.getUserId(), member.getNickName(), member.getEmail());
+		// 최근(3분)에 아이디를 가져왔다면 캐쉬에 해당 정보를 저장하고 비밀번호는 캐쉬데이터에서 찾는것이 저비용으로 로그인이 가능한 방법일듯
+
+		Member member = memberService.findOneByUserId(requestBody.get("userId"));
+
+		Map<String, String> response = new HashMap<>();
+
+		if (member != null && member.getUserPw().equals(requestBody.get("userPw"))){
+			response.put("seesionId", "test-mock-session");
+			response.put("userId", member.getUserId());
+			response.put("userPw", member.getUserPw());
+			response.put("email", member.getNickName());
+			return response;
 		}
 
-		return null;
+		response.put("result","false");
+		response.put("msg","no matching");
+
+		return response;
 	}
 
 	/** [v] 회원 정보 수정 (이메일, 이름, 닉네임)
@@ -47,33 +54,34 @@ public class UserInformationApi {
 	 * Body : email, name, nickname
 	 * */
 	@PostMapping("/user/info/update")
-	public Map<String, Boolean> updateUserInformation(@RequestBody @Valid MemberUpdateRequestDto memberUpdateRequestDto) {
+	public Map<String, String> updateUserInformation(@RequestBody @Valid Map<String, String> requestBody) {
 
 		// System.out.println(memberUpdateRequestDto.getUserId() + " " + memberUpdateRequestDto.getEmail() + " " + memberUpdateRequestDto.getNickName());
 		// TODO : 중복 이메일, 중복 닉네임 검사하기
-		Member member = memberService.findOneByUserId(memberUpdateRequestDto.getUserId());
+		Member member = memberService.findOneByUserId(requestBody.get("userId"));
 
-		Map<String, Boolean> result = new HashMap<>();
+		Map<String, String> result = new HashMap<>();
 
 		if(member != null) {
-			if(memberUpdateRequestDto.getEmail() != null) {
-				member.setEmail(memberUpdateRequestDto.getEmail());
+			if(requestBody.get("email") != null) {
+				member.setEmail(requestBody.get("email"));
 				member.setVerifiedEmail(false);
 
-				result.put("isEmailChanged", true);
+				result.put("isEmailChanged", "true");
 			}
-			if(memberUpdateRequestDto.getNickName() != null) {
-				member.setNickName(memberUpdateRequestDto.getNickName());
-				result.put("isNicknameChanged", true);
+			if(requestBody.get("nickName") != null) {
+				member.setNickName(requestBody.get("nickName"));
+				result.put("isNicknameChanged", "true");
 			}
 
-			memberService.save(MemberCreateRequestDto.builder()
-				.userId(member.getUserId())
-				.userPw(member.getUserPw())
-				.nickName(member.getNickName())
-				.email(member.getEmail())
-				.build());
+			memberService.save(
+				member.getUserId(), member.getUserPw(), member.getNickName(),
+				member.getEmail());
+			return result;
 		}
+
+		result.put("result","false");
+		result.put("msg","no match");
 		return result;
 	}
 
@@ -131,8 +139,8 @@ public class UserInformationApi {
 		if (true) { // "Redis 에 해당 키 발견시!"
 			String userId = "skyship36"; // redis 에 저장된 userId 값, 유저에게 노출되어선 안됨. 악의적인 사용자가 우연히 접속한 경우도 고려해야함
 
-			response.put("result", "success");
 			response.put("key", key);
+			response.put("result", "success");
 			response.put("data", "changed passwd:" + requestBody.get("userPw"));
 			memberService.changePassword(userId, requestBody.get("userPw"));
 
@@ -149,20 +157,26 @@ public class UserInformationApi {
 	 */
 	// 인덱스 "/user/password/update/send"
 	@PostMapping("/user/password/update/send")
-	public boolean updateUserPassword(@RequestBody Map<String, String> requestBody){
+	public Map<String, String> updateUserPassword(@RequestBody Map<String, String> requestBody){
 
-		Member member = memberService.findOneByUserIdAndUserPw(requestBody.get("userId"), requestBody.get("userPw"));
+		Member member = memberService.getUser(requestBody.get("userId"), requestBody.get("userPw"));
+
+		Map<String, String> response = new HashMap<>();
 
 		if(member != null){
 			member.setUserPw(requestBody.get("changePw"));
-			memberService.save(MemberCreateRequestDto.builder()
-				.userId(member.getUserId())
-				.userPw(member.getUserPw())
-				.nickName(member.getNickName())
-				.email(member.getEmail())
-				.build());
-			return true;
+
+			memberService.save(
+				member.getUserId(),
+				member.getUserPw(),
+				member.getEmail(),
+				member.getNickName()
+			);
+
+			response.put("result", "true");
+			return response;
 		}
-		return false;
+		response.put("result", "false");
+		return response;
 	}
 }
