@@ -1,4 +1,4 @@
-package com.mightyotter.learnershigh.domain.member.dto.request;
+package com.mightyotter.learnershigh.domain.member.dto;
 
 import com.mightyotter.learnershigh.domain.member.dao.Member;
 import lombok.Builder;
