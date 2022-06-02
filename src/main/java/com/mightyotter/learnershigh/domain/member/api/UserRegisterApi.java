@@ -2,6 +2,7 @@ package com.mightyotter.learnershigh.domain.member.api;
 
 import com.mightyotter.learnershigh.domain.member.application.MemberService;
 import com.mightyotter.learnershigh.domain.member.dto.MemberDeleteRequestDto;
+import com.mightyotter.learnershigh.global.config.Role;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class UserRegisterApi {
 	@PostMapping("/register")
 	public ResponseEntity<Map<String, String>> createUserAccount(@RequestBody Map<String, String> requestBody){
 		return ResponseEntity.ok().body(
-			memberService.save(requestBody.get("userId"),requestBody.get("userPw"),requestBody.get("nickName"),requestBody.get("email")));
+			memberService.save(requestBody.get("userId"),requestBody.get("userPw"),requestBody.get("nickName"),requestBody.get("email"), Role.MEMBER));
 	}
 
 	/** [√] 사용자 계정 삭제하기
@@ -61,7 +62,7 @@ public class UserRegisterApi {
 		return memberService.findOneByEmail(email) != null;
 	}
 
-	/** 회원 가입한 유저에게 이메일 인증 요청
+	/** [x] 회원 가입한 유저에게 이메일 인증 요청
 	 // TODO : 해당 이메일로 일회용 인증키 값 보내기
 	 // TODO : 일회용 인증키 값은 시간을 Seed 로 랜덤값
 	 // TODO : 1시간 내에 인증 완료 시 OK, 미완료시 임시 가입 정보 폐기
