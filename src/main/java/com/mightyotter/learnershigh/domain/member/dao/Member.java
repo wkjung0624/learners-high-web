@@ -1,8 +1,13 @@
 package com.mightyotter.learnershigh.domain.member.dao;
 
 import com.mightyotter.learnershigh.global.common.entity.BaseTimeEntity;
+import com.mightyotter.learnershigh.global.config.Role;
+import javax.persistence.AttributeConverter;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,8 +18,9 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@Builder
+@Builder // https://devfunny.tistory.com/337
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -33,6 +39,7 @@ public class Member extends BaseTimeEntity {
 
 	@Length(min = 64, max = 64)
 	@Column(nullable = false)
+	@Convert(converter=BCryptoConverter.class)
 	private String userPw;
 
 	@Column(nullable = false)
@@ -46,12 +53,20 @@ public class Member extends BaseTimeEntity {
 	@Column(nullable = false)
 	private boolean verifiedEmail;
 
-	@Builder
-	public Member(String userId, String userPw, String nickName, String email, Boolean verifiedEmail){
-		this.userId = userId;
-		this.userPw = userPw;
-		this.email = email;
-		this.nickName = nickName;
-		this.verifiedEmail = verifiedEmail;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Role role;
+}
+
+@Convert
+class BCryptoConverter implements AttributeConverter<String, String> {
+	// https://lelecoder.com/127 [lelecoder:티스토리]
+	@Override
+	public String convertToDatabaseColumn(String attribute){
+		return new BCryptPasswordEncoder().encode(attribute);
+	}
+	@Override
+	public String convertToEntityAttribute(String dbData){
+		return dbData;
 	}
 }
