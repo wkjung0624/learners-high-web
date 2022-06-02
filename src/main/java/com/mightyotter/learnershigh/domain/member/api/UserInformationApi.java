@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +28,7 @@ public class UserInformationApi {
 
 	/** [v] 사용자 로그인 */
 	@PostMapping("/user")
-	public Map<String, String> getUserAccount(@RequestBody @Valid Map<String, String> requestBody, HttpServletRequest request) {
+	public Map<String, String> login(@RequestBody @Valid Map<String, String> requestBody, HttpServletRequest request) {
 		// x 최근(3분)에 아이디를 가져왔다면 Redis 캐쉬에 해당 정보를 저장하고
 		// x 비밀번호는 Redis 캐쉬 데이터에서 찾는것이 저비용으로 로그인이 가능한 방법일듯
 		// ㅇ 조건1. 로그아웃인 상태부터 확인
@@ -65,6 +66,14 @@ public class UserInformationApi {
 
 			return result;
 		}
+	}
+	@GetMapping("/user/logout")
+	public String logout(HttpServletRequest request){
+		HttpSession session = request.getSession(false);
+		if(request.getSession() != null){
+			session.invalidate();
+		}
+		return "redirect:/";
 	}
 
 	/** [v] 회원 정보 수정 (이메일, 이름, 닉네임)
