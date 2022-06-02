@@ -5,6 +5,8 @@ import java.util.HashMap;
 import com.mightyotter.learnershigh.domain.member.application.MemberService;
 import com.mightyotter.learnershigh.domain.member.dao.Member;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,29 +25,46 @@ public class UserInformationApi {
 	// User 파트에서 'Read' 와 'Update' 를 담당
 	private final MemberService memberService;
 
-	/** [x] 사용자 로그인 */
+	/** [v] 사용자 로그인 */
 	@PostMapping("/user")
-	public Map<String, String> getUserAccount(@RequestBody @Valid Map<String, String> requestBody){
-		// TODO : Spring Session ID 를 참고해야함
+	public Map<String, String> getUserAccount(@RequestBody @Valid Map<String, String> requestBody, HttpServletRequest request) {
+		// x 최근(3분)에 아이디를 가져왔다면 Redis 캐쉬에 해당 정보를 저장하고
+		// x 비밀번호는 Redis 캐쉬 데이터에서 찾는것이 저비용으로 로그인이 가능한 방법일듯
+		// ㅇ 조건1. 로그아웃인 상태부터 확인
+		// ㅇ 조건2. 조건 1 선행 후 입력한 ID와 PW가 DB의 값과 일치하는지 확인
 
-		// 최근(3분)에 아이디를 가져왔다면 캐쉬에 해당 정보를 저장하고 비밀번호는 캐쉬데이터에서 찾는것이 저비용으로 로그인이 가능한 방법일듯
+		HttpSession session = request.getSession();
+		Map<String, String> result = new HashMap<>();
 
-		Member member = memberService.findOneByUserId(requestBody.get("userId"));
-
-		Map<String, String> response = new HashMap<>();
-
-		if (member != null && member.getUserPw().equals(requestBody.get("userPw"))){
-			response.put("seesionId", "test-mock-session");
-			response.put("userId", member.getUserId());
-			response.put("userPw", member.getUserPw());
-			response.put("email", member.getNickName());
-			return response;
+		if (memberService.hasAuthenticateInformation(session)) {
+			result.put("result","false");
+			result.put("msg","logout first");
+			return result;
 		}
+		else {
+			Member member = memberService.getUser(requestBody.get("userId"), requestBody.get("userPw"));
 
-		response.put("result","false");
-		response.put("msg","no matching");
+			if(member == null) {
+				result.put("result","false");
+				result.put("msg","no matching");
 
-		return response;
+				return result;
+			}
+
+			session.setAttribute("userId", member.getUserId());
+			session.setAttribute("userPw", member.getUserPw());
+			session.setAttribute("role", member.getRole());
+			session.setAttribute("nickName", member.getNickName());
+			session.setAttribute("email", member.getEmail());
+			session.setMaxInactiveInterval(12*60*60); // 자동 로그아웃 시간 60초
+
+			//session.getLastAccessedTime(); // 마지막으로 접근한 시간, 브라우저 종료 후에도 세션이 살아있는걸 방지
+
+			result.put("result", "ok");
+			result.put("msg", "hit");
+
+			return result;
+		}
 	}
 
 	/** [v] 회원 정보 수정 (이메일, 이름, 닉네임)
@@ -75,8 +94,11 @@ public class UserInformationApi {
 			}
 
 			memberService.save(
-				member.getUserId(), member.getUserPw(), member.getNickName(),
-				member.getEmail());
+				member.getUserId(),
+				member.getUserPw(),
+				member.getNickName(),
+				member.getEmail(),
+				member.getRole());
 			return result;
 		}
 
@@ -91,18 +113,18 @@ public class UserInformationApi {
 	@PostMapping("/user/id/find")
 	public Map<String, Object> findUserAccount(@RequestParam String email) {
 
-		Map<String, Object> response = new HashMap<>();
+		Map<String, Object> result = new HashMap<>();
 		Member member = memberService.findOneByEmail(email);
 
 		if (member != null){
-			response.put("result", "SUCCESS");
-			response.put("data", member.getUserId());
+			result.put("result", "SUCCESS");
+			result.put("data", member.getUserId());
 		} else {
-			response.put("result", "FAIL");
-			response.put("ERR_CODE", "DEV-ERO-1");
+			result.put("result", "FAIL");
+			result.put("ERR_CODE", "DEV-ERO-1");
 		}
 		// @RequestParam 말고 @RequestBody 로 변경하기;
-		return response;
+		return result;
 
 		// TODO: 해당 이메일로 아이디 정보와 비밀번호 초기화 링크를 보내는 기능 추가 필요
 		// TODO: 최상위 ResponseDto 클래스를 만들고 그 안에 제네릭클래스를 만들어서 사용하는건? 성공시 정상 DTO 매핑, 실패시 Excepion DTO 매핑
@@ -122,7 +144,7 @@ public class UserInformationApi {
 	 */
 	@PostMapping("/user/password/{key}/reset/send")
 	public Map<String, Object> resetUserPassword(@PathVariable String key, @RequestBody Map<String, String> requestBody) {
-		Map<String, Object> response = new HashMap<>();
+		Map<String, Object> result = new HashMap<>();
 
 		// TODO : 해당 API 주소에 무작위 조회를 막기위해 Limit 을 사용함
 		// TODO : Redis 에서 Reset key 발급 확인
@@ -139,15 +161,15 @@ public class UserInformationApi {
 		if (true) { // "Redis 에 해당 키 발견시!"
 			String userId = "skyship36"; // redis 에 저장된 userId 값, 유저에게 노출되어선 안됨. 악의적인 사용자가 우연히 접속한 경우도 고려해야함
 
-			response.put("key", key);
-			response.put("result", "success");
-			response.put("data", "changed passwd:" + requestBody.get("userPw"));
+			result.put("key", key);
+			result.put("result", "success");
+			result.put("data", "changed passwd:" + requestBody.get("userPw"));
 			memberService.changePassword(userId, requestBody.get("userPw"));
 
-			return response;
+			return result;
 		}
 
-		return response;
+		return result;
 	}
 
 	/**
@@ -161,22 +183,15 @@ public class UserInformationApi {
 
 		Member member = memberService.getUser(requestBody.get("userId"), requestBody.get("userPw"));
 
-		Map<String, String> response = new HashMap<>();
+		Map<String, String> result = new HashMap<>();
 
 		if(member != null){
 			member.setUserPw(requestBody.get("changePw"));
 
-			memberService.save(
-				member.getUserId(),
-				member.getUserPw(),
-				member.getEmail(),
-				member.getNickName()
-			);
-
-			response.put("result", "true");
-			return response;
+			result.put("result", "true");
+			return result;
 		}
-		response.put("result", "false");
-		return response;
+		result.put("result", "false");
+		return result;
 	}
 }
