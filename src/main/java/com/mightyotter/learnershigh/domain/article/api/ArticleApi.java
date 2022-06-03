@@ -2,10 +2,16 @@ package com.mightyotter.learnershigh.domain.article.api;
 
 import com.mightyotter.learnershigh.domain.article.application.ArticleService;
 import com.mightyotter.learnershigh.domain.article.dao.Article;
+import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,12 +30,17 @@ public class ArticleApi {
 	/**
 	 * 게시글 작성
 	 */
+
 	@PostMapping("/article")
-	public void createArticle(@RequestBody Map<String, String> requestBody) {
-		Article article;
+	public void createArticle(HttpServletRequest request, @RequestBody Map<String, String> requestBody) {
+
+		HttpSession session =  request.getSession();
+
+		session.getAttribute("userId");
+
 		articleService.save(
-			requestBody.get("categoryId"),
-			requestBody.get("authorId"),
+			Long.parseLong(requestBody.get("1")),
+			session.getAttribute("userId").toString(),
 			requestBody.get("title"),
 			requestBody.get("content"),
 			requestBody.get("hashtag"),
@@ -41,14 +52,18 @@ public class ArticleApi {
 	/**
 	 * 글 목록 조회
 	 */
-	@GetMapping("/article")
-	public void getArticle() {/*...*/}
-
-	/**
-	 * 특정 글 내용 가져오기
-	 */
-	@GetMapping("/article/{id}")
-	public void getArticleContent() {/*...*/}
+//	@GetMapping("/article")
+//	public List<Article> getArticles(Pageable page) {
+//		return articleService.getArticleList(page);
+//	}
+//
+//	/**
+//	 * 특정 글 내용 가져오기
+//	 */
+//	@GetMapping("/article/{id}")
+//	public Article getArticleContent(@PathVariable String id) {
+//		return articleService.getArticle(Long.parseLong(id));
+//	}
 
 	/**
 	 * 특정 글 수정
