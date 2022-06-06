@@ -2,13 +2,14 @@ package com.mightyotter.learnershigh.domain.article.api;
 
 import com.mightyotter.learnershigh.domain.article.application.ArticleService;
 import com.mightyotter.learnershigh.domain.article.dao.Article;
-import java.util.List;
-import java.util.Map;
+import com.mightyotter.learnershigh.domain.article.dto.ArticleSaveDto;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,38 +33,37 @@ public class ArticleApi {
 	 */
 
 	@PostMapping("/article")
-	public void createArticle(HttpServletRequest request, @RequestBody Map<String, String> requestBody) {
+	public void createArticle(HttpServletRequest request, @RequestBody ArticleSaveDto articleSaveDto) {
 
 		HttpSession session =  request.getSession();
 
-		session.getAttribute("userId");
-
 		articleService.save(
-			Long.parseLong(requestBody.get("1")),
+			articleSaveDto.getCategoryId(),
 			session.getAttribute("userId").toString(),
-			requestBody.get("title"),
-			requestBody.get("content"),
-			requestBody.get("hashtag"),
-			requestBody.get("thumbnailUrlPath"),
-			requestBody.get("mediaDataJson")
+			articleSaveDto.getTitle(),
+			articleSaveDto.getContent(),
+			articleSaveDto.getHashtag(),
+			articleSaveDto.getThumbnailUrlPath(),
+			articleSaveDto.getMediaDataJson()
 		);
+	}
+//
+//	/**
+//	 * 글 목록 조회
+//	 */
+	@GetMapping("/article")
+	public ResponseEntity<Page<Article>> getArticles(/*@PageableDefault(size=10, sort="")*/Pageable page) {
+		Page<Article> articlePage = articleService.getArticleList(page);
+		return new ResponseEntity<>(articlePage, HttpStatus.OK);
 	}
 
 	/**
-	 * 글 목록 조회
+	 * 특정 글 내용 가져오기
 	 */
-//	@GetMapping("/article")
-//	public List<Article> getArticles(Pageable page) {
-//		return articleService.getArticleList(page);
-//	}
-//
-//	/**
-//	 * 특정 글 내용 가져오기
-//	 */
-//	@GetMapping("/article/{id}")
-//	public Article getArticleContent(@PathVariable String id) {
-//		return articleService.getArticle(Long.parseLong(id));
-//	}
+	@GetMapping("/article/{id}")
+	public Article getArticleContent(@PathVariable Long id) {
+		return articleService.getArticle(id);
+	}
 
 	/**
 	 * 특정 글 수정
