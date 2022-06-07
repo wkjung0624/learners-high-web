@@ -28,6 +28,7 @@ public class Comment extends BaseTimeEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long commentId;
 
+	// 참조하는 객체를 기준으로 find 할 때 sendError() 발생시 해결방법 : https://cupeanimus.tistory.com/57
 	@JsonIgnore
 	@ManyToOne
 	//@JoinColumn(name = "ARTICLE_ID", referencedColumnName = "ARTICLE_ID")
