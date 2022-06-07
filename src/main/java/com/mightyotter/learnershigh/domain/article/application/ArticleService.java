@@ -2,12 +2,14 @@ package com.mightyotter.learnershigh.domain.article.application;
 
 import com.mightyotter.learnershigh.domain.article.dao.Article;
 import com.mightyotter.learnershigh.domain.article.dao.ArticleRepository;
-import java.util.List;
+import com.mightyotter.learnershigh.domain.article.dto.ArticleSaveDto;
+import com.mightyotter.learnershigh.domain.article.dto.ArticleUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @RequiredArgsConstructor
@@ -15,27 +17,27 @@ public class ArticleService {
 	private final ArticleRepository articleRepository;
 
 	@Transactional(rollbackFor = Exception.class)
-	public Long save(Long categoryId, String authorId, String title, String content, String hashtag,
-		String thumbnailUrlPath, String mediaDataJson) {
-		articleRepository.save(Article.builder()
-			.categoryId(categoryId)
-			.authorId(authorId)
-			.title(title)
-			.content(content)
-			.hashtag(hashtag)
-			.thumbnailUrlPath(thumbnailUrlPath)
-			.mediaDataJson(mediaDataJson)
-			.build());
-		return 1L;
+	public Article save(@RequestBody ArticleSaveDto articleSaveDto) {
+		return articleRepository.save(articleSaveDto.toEntity());
 	}
-//	public List<Article> getArticleList(Pageable page){
-//		return articleRepository.findAllOrderByArticleId(page);
-//	}
-//
 	public Page<Article> getArticleList(Pageable page) {
 		return articleRepository.findAll(page);
 	}
 	public Article getArticle(Long id){
 		return articleRepository.findByArticleId(id).orElse(null);
+	}
+
+	public void updateArticle(Long id, ArticleUpdateDto articleUpdateDto){
+		Article article = articleRepository.findByArticleId(id).orElse(null);
+
+		if(article != null) {
+			article.setCategoryId(articleUpdateDto.getCategoryId());
+			article.setHashtag(articleUpdateDto.getHashtag());
+			article.setTitle(articleUpdateDto.getTitle());
+			article.setContent(articleUpdateDto.getContent());
+			article.setMediaDataJson(articleUpdateDto.getMediaDataJson());
+			article.setIsVisible(articleUpdateDto.getIsVisible());
+			articleRepository.save(article);
+		}
 	}
 }
