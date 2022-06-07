@@ -1,13 +1,10 @@
 package com.mightyotter.learnershigh.domain.article.dto;
 
-import javax.persistence.Column;
+import com.mightyotter.learnershigh.domain.article.dao.Article;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @Getter
 @Setter
@@ -21,4 +18,16 @@ public class ArticleSaveDto {
 	private String hashtag;
 	private String thumbnailUrlPath;
 	private String mediaDataJson;
+
+	public Article toEntity(){
+		return Article.builder()
+			.categoryId(categoryId)
+			.authorId(authorId)
+			.title(title)
+			.content(content)
+			.hashtag(hashtag)
+			.thumbnailUrlPath(thumbnailUrlPath)
+			.mediaDataJson(mediaDataJson)
+			.build();
+	}
 }
