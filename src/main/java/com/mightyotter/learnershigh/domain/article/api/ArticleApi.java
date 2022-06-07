@@ -3,6 +3,7 @@ package com.mightyotter.learnershigh.domain.article.api;
 import com.mightyotter.learnershigh.domain.article.application.ArticleService;
 import com.mightyotter.learnershigh.domain.article.dao.Article;
 import com.mightyotter.learnershigh.domain.article.dto.ArticleSaveDto;
+import com.mightyotter.learnershigh.domain.article.dto.ArticleUpdateDto;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -31,21 +32,12 @@ public class ArticleApi {
 	/**
 	 * 게시글 작성
 	 */
-
 	@PostMapping("/article")
-	public void createArticle(HttpServletRequest request, @RequestBody ArticleSaveDto articleSaveDto) {
-
+	public Long createArticle(HttpServletRequest request, @RequestBody ArticleSaveDto articleSaveDto) {
 		HttpSession session =  request.getSession();
+		articleSaveDto.setAuthorId(session.getAttribute("userId").toString());
 
-		articleService.save(
-			articleSaveDto.getCategoryId(),
-			session.getAttribute("userId").toString(),
-			articleSaveDto.getTitle(),
-			articleSaveDto.getContent(),
-			articleSaveDto.getHashtag(),
-			articleSaveDto.getThumbnailUrlPath(),
-			articleSaveDto.getMediaDataJson()
-		);
+		return articleService.save(articleSaveDto).getArticleId();
 	}
 //
 //	/**
@@ -69,56 +61,17 @@ public class ArticleApi {
 	 * 특정 글 수정
 	 */
 	@PostMapping("/article/{id}/update")
-	public void updateArticle() {/*..*/}
+	public void updateArticle(@PathVariable Long id, @RequestBody ArticleUpdateDto articleUpdateDto) {
+		/*..*/
+		articleService.updateArticle(id, articleUpdateDto);
+	}
 
 	/**
 	 * 작성한 글 삭제
 	 */
 	@PostMapping("/article/{id}/delete")
-	public void deleteArticle() {/*...*/}
-
-
-	/**
-	 * 댓글 입력
-	 */
-	@PostMapping("/comment/{id}")
-	public void createComment() {
-		/*
-		Body {
-			Comment : “새로 작성하는 댓글”,
-		}
-		* */
-	}
-
-	/**
-	 * 댓글 목록 조회
-	 */
-	@GetMapping("/comment/{id}")
-	public void getArticleComment() {/*...*/}
-
-	/**
-	 * 댓글 수정
-	 */
-	@PostMapping("/comment/{id}/update")
-	public void updateArticleComment() {
-		/*
-		Body {
-			commentId : “234”,
-			comment  : “이것은 수정된 댓글입니다”,
-		}
-		*/
-	}
-
-	/**
-	 * 댓글 삭제
-	 */
-	@GetMapping("/comment/{id}/delete")
-	public void deleteComment() {
-		/*
-		Body {
-			commentId : “234”    <— 댓글 고유 번호
-		}
-		*/
+	public void deleteArticle(@PathVariable Long id) {
+		articleService.deleteArticle(id);
 	}
 }
 
