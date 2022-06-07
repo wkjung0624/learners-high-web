@@ -3,6 +3,7 @@ package com.mightyotter.learnershigh.domain.article.dao;
 import com.mightyotter.learnershigh.domain.member.dao.Member;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -57,4 +58,17 @@ public class Article {
 	// 외부 데이터[영상,사진] 링크(JSON), JSON으로 한 이유는 단순히 하나의 링크만 가져오지 않을수 있으니까
 	@Column(columnDefinition = "TEXT")
 	private String mediaDataJson;
+
+	// 공개, 비공개, 비밀번호 보호, 삭제
+	@Column
+	private short isVisible;
+
+	/* OneToMany, addComment 까지의 동작방법 공부 필요 */
+	@OneToMany(mappedBy="article",  cascade = CascadeType.ALL)
+	private List<Comment> comments;
+
+	public void addComment(Comment comment){
+		comment.setArticle(this);
+		this.comments.add(comment);
+	}
 }
