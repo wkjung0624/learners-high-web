@@ -13,6 +13,9 @@ public class BannerService {
 	public final BannerRepository bannerRepository;
 
 	public List<Banner> getAllBanners(String type){
+		if("all".equals(type)){
+			return bannerRepository.findAll();
+		}
 		return bannerRepository.findByType(type);
 	}
 	public Long addBanners(String type, BannerSaveDto bannerSaveDto){
