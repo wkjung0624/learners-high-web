@@ -22,7 +22,11 @@ public class BannerService {
 		bannerSaveDto.setType(type);
 		return bannerRepository.save(bannerSaveDto.toEntity()).getBannerId();
 	}
-	public void changeBannerVisible(){/*...*/}
+	public void changeBannerVisible(Long bannerId, boolean flag){
+		Banner banner = bannerRepository.getById(bannerId);
+		banner.setVisible(flag);
+		bannerRepository.save(banner);
+	}
 	public void deleteBanners(Long bannerId){
 		bannerRepository.deleteById(bannerId);
 	}
