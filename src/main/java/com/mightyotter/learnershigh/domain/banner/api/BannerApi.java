@@ -33,11 +33,12 @@ public class BannerApi {
 	public List<Banner> getAllBanners(@RequestParam String type){
 		return bannerService.getAllBanners(type);
 	}
+
 	// 배너 표시여부 변경
-	// @PostMapping("/banner/visible")
-	// public void changeBannerVisible(){
-	//     bannerService.changeBannerVisible();
-	// }
+	 @PostMapping("/banner/{bannerId}/visible")
+	 public void changeBannerVisible(@PathVariable Long bannerId, @RequestParam boolean flag){
+	     bannerService.changeBannerVisible(bannerId, flag);
+	 }
 
 	// 배너 삭제하기
 	@PostMapping("/banner/{bannerId}/delete")
