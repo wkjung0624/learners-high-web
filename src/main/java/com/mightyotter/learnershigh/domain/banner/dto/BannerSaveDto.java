@@ -2,7 +2,6 @@ package com.mightyotter.learnershigh.domain.banner.dto;
 
 
 import com.mightyotter.learnershigh.domain.banner.dao.Banner;
-import javax.persistence.Column;
 import lombok.Builder;
 import lombok.Setter;
 
@@ -11,13 +10,13 @@ import lombok.Setter;
 public class BannerSaveDto {
 	private String type;
 	private String bannerImageSourceUrl;
-	private String bannerHypertextLink;
+	private String bannerHyperLinkReference;
 
 	public Banner toEntity(){
 		return Banner.builder()
 			.type(type)
 			.bannerImageSourceUrl(bannerImageSourceUrl)
-			.bannerHypertextLink(bannerHypertextLink)
+			.bannerHyperLinkReference(bannerHyperLinkReference)
 			.build();
 	}
 }
