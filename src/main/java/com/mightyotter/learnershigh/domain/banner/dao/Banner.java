@@ -18,9 +18,18 @@ public class Banner {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long bannerId;
 
-	@Column(columnDefinition = "TEXT", nullable = false)
-	private String bannerImageUrl;
+	// 배너 구분 (상단 : TOP, 메인 carusel : MAIN)
+	@Column
+	private String type;
 
+	// 배너 이미지 소스
+	@Column(columnDefinition = "TEXT", nullable = false)
+	private String bannerImageSourceUrl;
+
+	// 배너 클릭시 연결될 하이퍼링크
 	@Column(columnDefinition = "TEXT", nullable = false)
 	private String bannerHypertextLink;
+
+	@Column
+	private boolean visible;
 }
