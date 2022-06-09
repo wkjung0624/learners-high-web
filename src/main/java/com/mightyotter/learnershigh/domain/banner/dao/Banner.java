@@ -33,7 +33,7 @@ public class Banner {
 
 	// 배너 클릭시 연결될 하이퍼링크
 	@Column(columnDefinition = "TEXT", nullable = false)
-	private String bannerHypertextLink;
+	private String bannerHyperLinkReference;
 
 	// 배너 개제 예정일
 //	@Column
