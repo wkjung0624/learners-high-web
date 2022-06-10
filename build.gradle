@@ -34,7 +34,10 @@ dependencies {
 
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
+	// MySQL 의존성
+	runtimeOnly 'mysql:mysql-connector-java'
 	runtimeOnly 'com.h2database:h2'
+
 	compileOnly 'org.projectlombok:lombok'
 
 	annotationProcessor 'org.projectlombok:lombok'
