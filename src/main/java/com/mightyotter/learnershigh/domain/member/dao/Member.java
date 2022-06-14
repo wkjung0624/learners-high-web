@@ -35,15 +35,15 @@ public class Member extends BaseTimeEntity {
 
 	@Length(min = 6, max = 30)
 	@Column(length = 30, unique = true, nullable = false)
-	private String userId;
+	private String username;
 
 	@Length(min = 64, max = 64)
 	@Column(nullable = false)
-	@Convert(converter=BCryptoConverter.class)
-	private String userPw;
+	//@Convert(converter=BCryptoConverter.class)
+	private String password;
 
 	@Column(nullable = false)
-	private String nickName;
+	private String nickname;
 
 	@Column(unique = true, nullable = false)
 	private String email;
@@ -56,17 +56,4 @@ public class Member extends BaseTimeEntity {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Role role;
-}
-
-@Convert
-class BCryptoConverter implements AttributeConverter<String, String> {
-	// https://lelecoder.com/127 [lelecoder:티스토리]
-	@Override
-	public String convertToDatabaseColumn(String attribute){
-		return new BCryptPasswordEncoder().encode(attribute);
-	}
-	@Override
-	public String convertToEntityAttribute(String dbData){
-		return dbData;
-	}
 }

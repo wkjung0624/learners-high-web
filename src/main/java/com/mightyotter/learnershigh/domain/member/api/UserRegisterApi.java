@@ -1,9 +1,11 @@
 package com.mightyotter.learnershigh.domain.member.api;
 
 import com.mightyotter.learnershigh.domain.member.application.MemberService;
+import com.mightyotter.learnershigh.domain.member.dao.Member;
+import com.mightyotter.learnershigh.domain.member.dto.MemberCreateRequestDto;
 import com.mightyotter.learnershigh.domain.member.dto.MemberDeleteRequestDto;
 import com.mightyotter.learnershigh.global.config.Role;
-import java.util.Map;
+import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,9 +28,19 @@ public class UserRegisterApi {
 
 	/** [√] 유저가 입력한 정보로 임시 회원가입 */
 	@PostMapping("/register")
-	public ResponseEntity<Map<String, String>> createUserAccount(@RequestBody Map<String, String> requestBody){
-		return ResponseEntity.ok().body(
-			memberService.save(requestBody.get("userId"),requestBody.get("userPw"),requestBody.get("nickName"),requestBody.get("email"), Role.MEMBER));
+	public ResponseEntity<HashMap<String,String>> createUserAccount(@RequestBody MemberCreateRequestDto memberCreateRequestDto){
+		Member member = memberService.save(memberCreateRequestDto.toEntity());
+
+		HashMap<String,String> result = new HashMap<>();
+		if(member != null){
+			result.put("msg", "OK");
+			result.put("result", "OK");
+			return ResponseEntity.ok().body(result);
+		}
+
+		result.put("msg", "FALSE");
+		result.put("result", "FALSE");
+		return ResponseEntity.ok().body(result);
 	}
 
 	/** [√] 사용자 계정 삭제하기
@@ -44,7 +56,7 @@ public class UserRegisterApi {
 	/** [√] 회원 가입 전 아이디 중복 확인 */
 	@GetMapping("/register/id/duplicate")
 	public boolean checkIdDuplication(@RequestParam(required = true) String userId) {
-		return memberService.findOneByUserId(userId) != null;
+		return memberService.findOneByUsername(userId) != null;
 	}
 
 	/** [√] 회원 가입 전 이메일 중복 확인

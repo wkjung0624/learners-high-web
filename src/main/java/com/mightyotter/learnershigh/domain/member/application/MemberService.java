@@ -2,12 +2,8 @@ package com.mightyotter.learnershigh.domain.member.application;
 
 import com.mightyotter.learnershigh.domain.member.dao.Member;
 import com.mightyotter.learnershigh.domain.member.dao.MemberRepository;
-
 import com.mightyotter.learnershigh.domain.member.dto.MemberDeleteRequestDto;
-import com.mightyotter.learnershigh.global.config.Role;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -29,57 +25,46 @@ public class MemberService {
 	// 로그인 했는지 확인하는 Req 헤더 검증 메서드 만들어야함
 	// 공통의 모듈로 따로 뺴야할까? (Common package)
 	public boolean hasAuthenticateInformation(HttpSession userSession){
-		return userSession.getAttribute("userId") != null;
+		return userSession.getAttribute("username") != null;
 	}
 
 	@Transactional(rollbackFor = Exception.class)
-	public Map<String, String> save(String userId, String userPw, String nickName, String email, Role role){
+	public Member save(Member member){
 
-		Map<String, String> response = new HashMap<>();
-
-		if(findOneByUserId(userId) == null &&
-			findOneByEmail(userPw) == null){
-
-			memberRepository.save(Member.builder()
-				.userId(userId)
-				.userPw(userPw) // 서버 측에서 유저의 패스워드를 암호화하여 저장
-				.nickName(nickName)
-				.email(email)
-				.verifiedEmail(false)
-				.role(role)
-				.build());
-
-			response.put("result","ok");
-
-			return response;
+		if(findOneByUsername(member.getUsername()) == null &&
+			findOneByEmail(member.getPassword()) == null){
+			member.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
+			return memberRepository.save(member);
 		}
 
-		response.put("result","false");
-		return response;
+		return null;
 	}
 	@Transactional(rollbackFor = Exception.class)
 	public boolean delete(MemberDeleteRequestDto memberDeleteRequestDto){
 
-		Member member = getUser(memberDeleteRequestDto.getUserId(),
-			memberDeleteRequestDto.getUserPw());
+		Member member = getUser(memberDeleteRequestDto.getUsername(),
+			memberDeleteRequestDto.getPassword());
 
 		if (member != null){
 			memberRepository.delete(member);
 			return true;
 		}
-		// TODO: 아이디와 비밀번호 외에 유저의 "로그인 인증값" 도 같이 제출되어야함
+		// TODO: 아이디와 비밀번호 외에 유저의 "로그인 인증값(세션ID)" 도 같이 제출되어야함
 		return false;
 	}
 
 	@Transactional(rollbackFor = Exception.class)
-	public boolean changePassword(String userId, String userPw){
+	public boolean changePassword(String username, String password){
 
-		Optional<Member> member = memberRepository.findOneByUserId(userId);
+		Optional<Member> memberFindResult = memberRepository.findOneByUsername(username);
 
-		if(member.isPresent()){
-			member.get().setUserPw(userPw);
+		if(memberFindResult.isPresent()){
+			Member member = memberFindResult.get();
+			member.setPassword(bCryptPasswordEncoder.encode(password));
+			memberRepository.save(member);
 			return true;
 		}
+
 		return false;
 	}
 
@@ -88,13 +73,13 @@ public class MemberService {
 			.findOneByEmail(email)
 			.orElse(null);
 	}
-	public Member findOneByUserId(String userId) {
+	public Member findOneByUsername(String username) {
 		return memberRepository
-			.findOneByUserId(userId)
+			.findOneByUsername(username)
 			.orElse(null);
 	}
 
-	public Member getUser(String userId, String userPw) {
+	public Member getUser(String username, String password) {
 
 		Member member;
 
@@ -104,10 +89,10 @@ public class MemberService {
 			* */
 		} else {
 			// 레디스에 멤버 캐쉬 데이터 저장 과정 추가
-			member = findOneByUserId(userId);
+			member = findOneByUsername(username);
 		}
 
-		if(member != null && bCryptPasswordEncoder.matches(userPw, member.getUserPw())) {
+		if(member != null && bCryptPasswordEncoder.matches(password, member.getPassword())) {
 			return member;
 		}
 
