@@ -21,6 +21,8 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	// MYSQL DB 사용을 위한 의존성
+	implementation 'mysql:mysql-connector-java'
 	// Spring 에서 Redis 에 대한 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	// Redis 를 Session Storage 로 사용하기 위한 의존성
@@ -31,6 +33,7 @@ dependencies {
 	implementation 'org.hibernate.validator:hibernate-validator:7.0.4.Final'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'junit:junit:4.13.1'
+
 
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
