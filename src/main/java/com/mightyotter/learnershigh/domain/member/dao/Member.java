@@ -2,9 +2,8 @@ package com.mightyotter.learnershigh.domain.member.dao;
 
 import com.mightyotter.learnershigh.global.common.entity.BaseTimeEntity;
 import com.mightyotter.learnershigh.global.config.Role;
-import javax.persistence.AttributeConverter;
+import java.io.Serializable;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -28,7 +27,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //@Data //(@Getter 와 @Setter 를 합친 것 )
 @Entity
 @Table(name = "TBL_MEMBER")
-public class Member extends BaseTimeEntity {
+public class Member extends BaseTimeEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -39,7 +38,7 @@ public class Member extends BaseTimeEntity {
 
 	@Length(min = 64, max = 64)
 	@Column(nullable = false)
-	//@Convert(converter=BCryptoConverter.class)
+
 	private String password;
 
 	@Column(nullable = false)
