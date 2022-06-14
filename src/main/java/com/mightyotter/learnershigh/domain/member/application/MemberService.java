@@ -7,15 +7,15 @@ import java.util.Date;
 import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Service//("userDetailService")
 @RequiredArgsConstructor
-public class MemberService {
+public class MemberService{
 	private final MemberRepository memberRepository;
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
 	// 현재 세션이 Timeout 되지 않은 유효한 세션인가? (30분 : 30 * 60[초])
 	public boolean isAuthenticationValidation(HttpSession userSession){
@@ -33,7 +33,7 @@ public class MemberService {
 
 		if(findOneByUsername(member.getUsername()) == null &&
 			findOneByEmail(member.getPassword()) == null){
-			member.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
+			member.setPassword(passwordEncoder.encode(member.getPassword()));
 			return memberRepository.save(member);
 		}
 
@@ -60,7 +60,7 @@ public class MemberService {
 
 		if(memberFindResult.isPresent()){
 			Member member = memberFindResult.get();
-			member.setPassword(bCryptPasswordEncoder.encode(password));
+			member.setPassword(passwordEncoder.encode(password));
 			memberRepository.save(member);
 			return true;
 		}
@@ -92,7 +92,7 @@ public class MemberService {
 			member = findOneByUsername(username);
 		}
 
-		if(member != null && bCryptPasswordEncoder.matches(password, member.getPassword())) {
+		if(member != null && passwordEncoder.matches(password, member.getPassword())) {
 			return member;
 		}
 
