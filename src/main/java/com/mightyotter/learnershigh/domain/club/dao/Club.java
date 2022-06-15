@@ -1,34 +1,37 @@
 package com.mightyotter.learnershigh.domain.club.dao;
 
+import com.mightyotter.learnershigh.global.common.entity.BaseTimeEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-@Getter
-@Setter
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-public class Club {
+public class Club extends BaseTimeEntity {
 	@Id	@Column(name = "CLUB_ID")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long clubId;
 
-	// 최초 생성자 ID
+	// 최초 생성자 ID 또는 마스터 권한 위임자(Member 클래스로 매핑 필요)
 	@Column(nullable = false)
-	private String creator;
+	private String master;
 
 	// 클럽명
 	@Column(nullable = false)
-	private String name;
+	private String clubName;
 
 	// 클럽 입장 시 필요한 비밀번호
 	@Column
-	private String passwd;
+	private String password;
 
 	// 클럽 메인 이미지 주소
 	@Column
