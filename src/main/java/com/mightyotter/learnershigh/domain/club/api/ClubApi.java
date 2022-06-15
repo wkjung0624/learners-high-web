@@ -1,9 +1,138 @@
 package com.mightyotter.learnershigh.domain.club.api;
 
+import com.mightyotter.learnershigh.domain.club.application.impl.ClubServiceImpl;
+import com.mightyotter.learnershigh.domain.club.dao.Club;
+import com.mightyotter.learnershigh.domain.club.dto.ClubCreateRequestDto;
+import com.mightyotter.learnershigh.domain.club.dto.ClubUpdateRequestDto;
+import com.mightyotter.learnershigh.domain.club.exception.DuplicatedClubNameException;
+import java.util.List;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/")
 public class ClubApi {
+
+	private final ClubServiceImpl clubServiceImpl;
+
+	@PostMapping("/club")
+	public Long createClub(@RequestBody ClubCreateRequestDto clubCreateRequestDto) throws DuplicatedClubNameException {
+		return clubServiceImpl.createClub(clubCreateRequestDto);
+	}
+	@GetMapping("/club")
+	public ResponseEntity<List<Club>> getClubList() {
+		return ResponseEntity.ok(clubServiceImpl.getClubList());
+	}
+	@GetMapping("/club/{clubId}")
+	public ResponseEntity<Club> getClubDetail(@PathVariable Long clubId) {
+		return ResponseEntity.ok(clubServiceImpl.getClubDetail(clubId));
+	}
+
+	@GetMapping("/club/{clubId}/enter")
+	public void enterClub(@PathVariable Long clubId, @RequestParam(required=false) String password) {
+ 		clubServiceImpl.enterClub(clubId, password);
+ 	}
+
+	@PostMapping("/club/{clubId}/update")
+	public Club updateClubInfo(@PathVariable Long clubId, @RequestBody ClubUpdateRequestDto clubUpdateRequestDto) {
+		return clubServiceImpl.updateClubInfo(clubId, clubUpdateRequestDto);
+	}
+
+	@PostMapping("/club/{clubId}/delegate")
+	public boolean delegateClubMasterPrivileges(@PathVariable Long clubId, @RequestBody Map<String, String> requestBody) {
+		return clubServiceImpl.delegateClubMasterPrivileges(clubId, requestBody.get("delegatedUsername"));
+	}
+
+	@PostMapping("/club/{clubId}/delete")
+	public void deleteClub(@PathVariable Long clubId) {
+		clubServiceImpl.deleteClub(clubId);
+	}
+//
+//	@GetMapping("/club/{clubId}/channel")
+//	public void getClubChannelList() {
+//		clubServiceImpl.getClubChannelList();
+//	}
+//
+//	@PostMapping("/club/{clubId}/channel/{channelId}/withdraw")
+//	public void withdrawClubMembership() {
+//
+//	}
+//
+//	// 초대 링크 생성 (jwt 로 파라미터 생성하기, 생성과 동시에 In-Memory Storage 에 저장 (만료시간 1시간))
+//	// Redis 저장 키 값은 invite:club:{클럽ID}:{iss값}:{aud값}
+//	// jwt payload 내용 >>
+//	/*
+//		iss(이슈어):(초대발행자아이디),
+//		aud(청중):초대받는사람,
+//		iat(발행일):linuxTime,
+//		exp(만료일):linuxTime
+//	 */
+//	// jwt 공식 키 : https://datatracker.ietf.org/doc/html/rfc7519#section-4.1
+//	@PostMapping("/club/{clubId}/channel/{channelId}/invite")
+//	public void inviteClubMember() {
+//		// /club/{clubId}/channel/{channelId}/join?
+//	}
+//	@PostMapping("/club/{clubId}/channel/{channelId}/withdraw")
+//	public void approveClubMembershipRequest() {
+//	}
+//	@PostMapping("/club/{clubId}/member/{memberId}/elevate")
+//	public void grantClubMemberPrivileges() {
+//
+//	}
+//	@PostMapping("/club/{clubId}/member/{memberId}/kick")
+//	public void kickClubMember() {
+//
+//	}
+//	@PostMapping("/club/{clubId}/channel")
+//	public void createClubChannel() {
+//
+//	}
+//
+//	@PostMapping("/club/{clubId}/channel/{channelId}/update")
+//	public void updateClubChannelInfo() {
+//
+//	}
+//
+//
+//	@PostMapping("/club/{clubId}/channel/{channelId}/delete")
+//	public void deleteClubChannel() {
+//
+//	}
+//
+//	@PostMapping("/club/{clubId}/channel/{channelId}/post")
+//	public void addClubPost() {
+//
+//	}
+//
+//	@GetMapping("/club/{clubId}/channel/{channelId}/post")
+//	public void getClubPostList() {
+//
+//	}
+//
+//	@PostMapping("/club/{clubId}/channel/{channelId}/post")
+//	public void getClubPostDetail() {
+//
+//	}
+//
+//	@PostMapping("/club/{clubId}/channel/{channelId}/post/{postId}/update")
+//	public void updateClubPost() {
+//
+//	}
+//
+//	@PostMapping("/club/{clubId}/channel/{channelId}/post/{postId}/delete")
+//	public void removeClubPost() {
+//
+//	}
+	
 	/*
 	# 공통
 		클럽 리스트 조회
