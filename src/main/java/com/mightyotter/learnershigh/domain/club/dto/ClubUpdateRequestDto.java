@@ -1,13 +1,16 @@
 package com.mightyotter.learnershigh.domain.club.dto;
 
 import com.mightyotter.learnershigh.domain.club.dao.Club;
+import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Setter
+@Getter
 public class ClubUpdateRequestDto {
 	private String clubName;
 	private String password;
-	private String mainImageUrlPath;
+	private MultipartFile clubImageFile;
 	private String description;
 	private int maximumUserCount; // 클럽 활동성별 유저 제한?
 	private boolean visible;
@@ -16,7 +19,6 @@ public class ClubUpdateRequestDto {
 		return Club.builder()
 			.clubName(clubName)
 			.password(password)
-			.mainImageUrlPath(mainImageUrlPath)
 			.description(description)
 			.maximumUserCount(maximumUserCount)
 			.visible(visible)

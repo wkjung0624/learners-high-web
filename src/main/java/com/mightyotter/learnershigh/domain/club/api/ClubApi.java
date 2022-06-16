@@ -5,10 +5,12 @@ import com.mightyotter.learnershigh.domain.club.dao.Club;
 import com.mightyotter.learnershigh.domain.club.dto.ClubCreateRequestDto;
 import com.mightyotter.learnershigh.domain.club.dto.ClubUpdateRequestDto;
 import com.mightyotter.learnershigh.domain.club.exception.DuplicatedClubNameException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/")
@@ -24,8 +27,10 @@ public class ClubApi {
 
 	private final ClubServiceImpl clubServiceImpl;
 
+	// x - multipart 와 dto 객체를 동시에 쓰고싶을때는? : https://myunji.tistory.com/488
+	// dto 에서 multipart 를 같이 받아오고싶을때는 ? : https://pooney.tistory.com/10
 	@PostMapping("/club")
-	public Long createClub(@RequestBody ClubCreateRequestDto clubCreateRequestDto) throws DuplicatedClubNameException {
+	public Long createClub(ClubCreateRequestDto clubCreateRequestDto) throws DuplicatedClubNameException, IOException, NullPointerException {
 		return clubServiceImpl.createClub(clubCreateRequestDto);
 	}
 	@GetMapping("/club")
@@ -43,7 +48,7 @@ public class ClubApi {
  	}
 
 	@PostMapping("/club/{clubId}/update")
-	public Club updateClubInfo(@PathVariable Long clubId, @RequestBody ClubUpdateRequestDto clubUpdateRequestDto) {
+	public Club updateClubInfo(@PathVariable Long clubId, ClubUpdateRequestDto clubUpdateRequestDto) {
 		return clubServiceImpl.updateClubInfo(clubId, clubUpdateRequestDto);
 	}
 

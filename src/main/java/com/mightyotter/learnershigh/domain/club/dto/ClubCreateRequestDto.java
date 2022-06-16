@@ -1,14 +1,15 @@
 package com.mightyotter.learnershigh.domain.club.dto;
 
-import com.mightyotter.learnershigh.domain.club.dao.Club;
+import com.mightyotter.learnershigh.domain.club.dao.Club;;
+import org.springframework.web.multipart.MultipartFile;
 import lombok.Data;
-
+// javax.validation annotaion 문서 : https://jakarta.ee/specifications/bean-validation/3.0/jakarta-bean-validation-spec-3.0.html
 @Data
 public class ClubCreateRequestDto {
 	private String master;
 	private String clubName;
 	private String password;
-	private String mainImageUrlPath;
+	private MultipartFile clubImageFile;
 	private String description;
 	private int maximumUserCount; // 클럽 활동성별 유저 제한?
 	private boolean visible;
@@ -18,7 +19,6 @@ public class ClubCreateRequestDto {
 			.master(master)
 			.clubName(clubName)
 			.password(password)
-			.mainImageUrlPath(mainImageUrlPath)
 			.description(description)
 			.maximumUserCount(maximumUserCount)
 			.visible(visible)
