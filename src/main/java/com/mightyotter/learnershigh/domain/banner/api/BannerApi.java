@@ -3,15 +3,13 @@ package com.mightyotter.learnershigh.domain.banner.api;
 import com.mightyotter.learnershigh.domain.banner.application.BannerService;
 import com.mightyotter.learnershigh.domain.banner.dao.Banner;
 import com.mightyotter.learnershigh.domain.banner.dto.BannerSaveDto;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +23,7 @@ public class BannerApi {
 
 	// 배너 등록하기
 	@PostMapping("/banner")
-	public Long addBanner(@RequestParam String type, @RequestBody BannerSaveDto bannerSaveDto){
+	public Long addBanner(@RequestParam String type, BannerSaveDto bannerSaveDto) throws IllegalArgumentException, IOException {
 		return bannerService.addBanners(type, bannerSaveDto);
 	}
 	// 배너 정보 가져오기
