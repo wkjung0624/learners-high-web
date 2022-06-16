@@ -23,6 +23,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	// Spring 에서 Redis 에 대한 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	// AWS S3 for MySQL 서비스 사용을 위한 의존성 추가
+	implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.1000')
+	implementation 'com.amazonaws:aws-java-sdk-s3'
+
 	// Redis 를 Session Storage 로 사용하기 위한 의존성
 	implementation 'org.springframework.session:spring-session-data-redis'
 	// 회원 별 보안정책(접근권한 등)을 설정하기 위한 Security 의존성 설치
