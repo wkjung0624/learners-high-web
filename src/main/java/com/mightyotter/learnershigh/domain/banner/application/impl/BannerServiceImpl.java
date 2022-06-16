@@ -21,10 +21,12 @@ public class BannerServiceImpl implements BannerService {
 	public final BannerRepository bannerRepository;
 	@Override
 	public List<Banner> getAllBanners(String type){
-		if("all".equals(type)){
-			return bannerRepository.findAll();
-		}
-		return bannerRepository.findByType(type);
+		// enum 에서 .equals 를 쓸 필요없는 이유
+		// - https://webfirewood.tistory.com/132
+
+		if(BannerType.ALL == BannerType.valueOf(type.toUpperCase())) return bannerRepository.findAll();
+
+		return bannerRepository.findByType(BannerType.valueOf(type.toUpperCase()).getValue());
 	}
 	@Override
 	public Long addBanners(String type, BannerSaveDto bannerSaveDto) throws IllegalArgumentException, IOException {
