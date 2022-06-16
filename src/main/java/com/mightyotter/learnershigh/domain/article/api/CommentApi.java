@@ -2,10 +2,8 @@ package com.mightyotter.learnershigh.domain.article.api;
 
 import com.mightyotter.learnershigh.domain.article.application.CommentService;
 import com.mightyotter.learnershigh.domain.article.dao.Comment;
-import com.mightyotter.learnershigh.domain.article.dto.CommentEditDto;
 import com.mightyotter.learnershigh.domain.article.dto.CommentSaveDto;
 import java.util.List;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +30,7 @@ public class CommentApi {
 	}
 	// 수정과 삭제는 CommentId 만 있으면 되는데 일관된 주소를 쓰기 위해서 굳이 ArticleId 를 써야할까?
 	@PostMapping("/article/{articleId}/comment/{commentId}/edit")
-	public Comment editComment(@PathVariable Long articleId, @PathVariable Long commentId, String content){
+	public Comment editComment(@PathVariable Long articleId, @PathVariable Long commentId, @RequestBody String content){
 		return commentService.editComment(commentId, content);
 	}
 	// 수정과 삭제는 CommentId 만 있으면 되는데 일관된 주소를 쓰기 위해서 굳이 ArticleId 를 써야할까?

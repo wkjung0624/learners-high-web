@@ -2,9 +2,8 @@ package com.mightyotter.learnershigh.domain.member.dao;
 
 import com.mightyotter.learnershigh.global.common.entity.BaseTimeEntity;
 import com.mightyotter.learnershigh.global.config.Role;
-import javax.persistence.AttributeConverter;
+import java.io.Serializable;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -28,22 +27,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //@Data //(@Getter 와 @Setter 를 합친 것 )
 @Entity
 @Table(name = "TBL_MEMBER")
-public class Member extends BaseTimeEntity {
+public class Member extends BaseTimeEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Length(min = 6, max = 30)
 	@Column(length = 30, unique = true, nullable = false)
-	private String userId;
+	private String username;
 
 	@Length(min = 64, max = 64)
 	@Column(nullable = false)
-	@Convert(converter=BCryptoConverter.class)
-	private String userPw;
+
+	private String password;
 
 	@Column(nullable = false)
-	private String nickName;
+	private String nickname;
 
 	@Column(unique = true, nullable = false)
 	private String email;
@@ -56,17 +55,4 @@ public class Member extends BaseTimeEntity {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Role role;
-}
-
-@Convert
-class BCryptoConverter implements AttributeConverter<String, String> {
-	// https://lelecoder.com/127 [lelecoder:티스토리]
-	@Override
-	public String convertToDatabaseColumn(String attribute){
-		return new BCryptPasswordEncoder().encode(attribute);
-	}
-	@Override
-	public String convertToEntityAttribute(String dbData){
-		return dbData;
-	}
 }

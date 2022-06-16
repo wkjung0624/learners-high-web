@@ -43,7 +43,7 @@ public class UserInformationApi {
 			return result;
 		}
 		else {
-			Member member = memberService.getUser(requestBody.get("userId"), requestBody.get("userPw"));
+			Member member = memberService.getUser(requestBody.get("username"), requestBody.get("password"));
 
 			if(member == null) {
 				result.put("result","false");
@@ -52,10 +52,10 @@ public class UserInformationApi {
 				return result;
 			}
 
-			session.setAttribute("userId", member.getUserId());
-			session.setAttribute("userPw", member.getUserPw());
+			session.setAttribute("username", member.getUsername());
+			session.setAttribute("password", member.getPassword());
 			session.setAttribute("role", member.getRole());
-			session.setAttribute("nickName", member.getNickName());
+			session.setAttribute("nickname", member.getNickname());
 			session.setAttribute("email", member.getEmail());
 			session.setMaxInactiveInterval(12*60*60); // 자동 로그아웃 시간 60초
 
@@ -84,9 +84,7 @@ public class UserInformationApi {
 	@PostMapping("/user/info/update")
 	public Map<String, String> updateUserInformation(@RequestBody @Valid Map<String, String> requestBody) {
 
-		// System.out.println(memberUpdateRequestDto.getUserId() + " " + memberUpdateRequestDto.getEmail() + " " + memberUpdateRequestDto.getNickName());
-		// TODO : 중복 이메일, 중복 닉네임 검사하기
-		Member member = memberService.findOneByUserId(requestBody.get("userId"));
+		Member member = memberService.findOneByUsername(requestBody.get("username"));
 
 		Map<String, String> result = new HashMap<>();
 
@@ -97,17 +95,12 @@ public class UserInformationApi {
 
 				result.put("isEmailChanged", "true");
 			}
-			if(requestBody.get("nickName") != null) {
-				member.setNickName(requestBody.get("nickName"));
+			if(requestBody.get("nickname") != null) {
+				member.setNickname(requestBody.get("nickname"));
 				result.put("isNicknameChanged", "true");
 			}
 
-			memberService.save(
-				member.getUserId(),
-				member.getUserPw(),
-				member.getNickName(),
-				member.getEmail(),
-				member.getRole());
+			memberService.save(member);
 			return result;
 		}
 
@@ -127,7 +120,7 @@ public class UserInformationApi {
 
 		if (member != null){
 			result.put("result", "SUCCESS");
-			result.put("data", member.getUserId());
+			result.put("data", member.getUsername());
 		} else {
 			result.put("result", "FAIL");
 			result.put("ERR_CODE", "DEV-ERO-1");
@@ -168,12 +161,12 @@ public class UserInformationApi {
 		 */
 
 		if (true) { // "Redis 에 해당 키 발견시!"
-			String userId = "skyship36"; // redis 에 저장된 userId 값, 유저에게 노출되어선 안됨. 악의적인 사용자가 우연히 접속한 경우도 고려해야함
+			String username = "skyship36"; // redis 에 저장된 userId 값, 유저에게 노출되어선 안됨. 악의적인 사용자가 우연히 접속한 경우도 고려해야함
 
 			result.put("key", key);
 			result.put("result", "success");
-			result.put("data", "changed passwd:" + requestBody.get("userPw"));
-			memberService.changePassword(userId, requestBody.get("userPw"));
+			result.put("data", "changed passwd:" + requestBody.get("password"));
+			memberService.changePassword(username, requestBody.get("password"));
 
 			return result;
 		}
@@ -190,12 +183,12 @@ public class UserInformationApi {
 	@PostMapping("/user/password/update/send")
 	public Map<String, String> updateUserPassword(@RequestBody Map<String, String> requestBody){
 
-		Member member = memberService.getUser(requestBody.get("userId"), requestBody.get("userPw"));
+		Member member = memberService.getUser(requestBody.get("username"), requestBody.get("password"));
 
 		Map<String, String> result = new HashMap<>();
 
 		if(member != null){
-			member.setUserPw(requestBody.get("changePw"));
+			member.setPassword(requestBody.get("changePassword"));
 
 			result.put("result", "true");
 			return result;

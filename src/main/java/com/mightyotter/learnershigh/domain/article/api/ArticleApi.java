@@ -35,7 +35,7 @@ public class ArticleApi {
 	@PostMapping("/article")
 	public Long createArticle(HttpServletRequest request, @RequestBody ArticleSaveDto articleSaveDto) {
 		HttpSession session =  request.getSession();
-		articleSaveDto.setAuthorId(session.getAttribute("userId").toString());
+		articleSaveDto.setAuthorId(session.getAttribute("username").toString());
 
 		return articleService.save(articleSaveDto).getArticleId();
 	}
