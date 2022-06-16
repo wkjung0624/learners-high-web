@@ -7,11 +7,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,9 +35,13 @@ public class Club extends BaseTimeEntity {
 	@Column
 	private String password;
 
-	// 클럽 메인 이미지 주소
+	// 클럽 메인 이미지 저장 주소
 	@Column
 	private String mainImageUrlPath;
+
+	// 클럽 메인 이미지 파일명
+	@Column
+	private String mainImageFileName;
 
 	// 클럽 소개글
 	@Column
