@@ -10,13 +10,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Builder
 public class BannerSaveDto {
-	private String type;
 	private MultipartFile bannerImageFile;
 	private String bannerHyperLinkReference;
 
 	public Banner toEntity(){
 		return Banner.builder()
-			.type(type)
 			.bannerHyperLinkReference(bannerHyperLinkReference)
 			.build();
 	}
