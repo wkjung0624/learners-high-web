@@ -1,4 +1,4 @@
-package com.mightyotter.learnershigh.global.config;
+package com.mightyotter.learnershigh.global.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

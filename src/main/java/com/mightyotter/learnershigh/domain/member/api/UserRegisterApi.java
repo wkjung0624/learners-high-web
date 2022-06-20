@@ -1,10 +1,9 @@
 package com.mightyotter.learnershigh.domain.member.api;
 
 import com.mightyotter.learnershigh.domain.member.application.MemberService;
-import com.mightyotter.learnershigh.domain.member.dao.Member;
+import com.mightyotter.learnershigh.domain.member.domain.Member;
 import com.mightyotter.learnershigh.domain.member.dto.MemberCreateRequestDto;
 import com.mightyotter.learnershigh.domain.member.dto.MemberDeleteRequestDto;
-import com.mightyotter.learnershigh.global.config.Role;
 import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

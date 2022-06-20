@@ -1,7 +1,7 @@
 package com.mightyotter.learnershigh.domain.article.api;
 
 import com.mightyotter.learnershigh.domain.article.application.ArticleService;
-import com.mightyotter.learnershigh.domain.article.dao.Article;
+import com.mightyotter.learnershigh.domain.article.domain.Article;
 import com.mightyotter.learnershigh.domain.article.dto.ArticleSaveDto;
 import com.mightyotter.learnershigh.domain.article.dto.ArticleUpdateDto;
 import javax.servlet.http.HttpServletRequest;

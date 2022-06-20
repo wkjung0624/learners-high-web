@@ -1,4 +1,4 @@
-package com.mightyotter.learnershigh.global.common.entity;
+package com.mightyotter.learnershigh.domain.model;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

@@ -1,6 +1,6 @@
 package com.mightyotter.learnershigh.domain.banner.application;
 
-import com.mightyotter.learnershigh.domain.banner.dao.Banner;
+import com.mightyotter.learnershigh.domain.banner.domain.Banner;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;

@@ -1,7 +1,7 @@
 package com.mightyotter.learnershigh.domain.member.dto;
 
-import com.mightyotter.learnershigh.domain.member.dao.Member;
-import com.mightyotter.learnershigh.global.config.Role;
+import com.mightyotter.learnershigh.domain.member.domain.Member;
+import com.mightyotter.learnershigh.domain.model.Role;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package com.mightyotter.learnershigh.domain.banner.dto;
 
-import com.mightyotter.learnershigh.domain.banner.dao.Banner;
+import com.mightyotter.learnershigh.domain.banner.domain.Banner;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

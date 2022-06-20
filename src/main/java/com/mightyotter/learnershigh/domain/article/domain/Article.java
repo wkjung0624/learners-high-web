@@ -1,7 +1,5 @@
-package com.mightyotter.learnershigh.domain.article.dao;
+package com.mightyotter.learnershigh.domain.article.domain;
 
-import com.mightyotter.learnershigh.domain.member.dao.Member;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

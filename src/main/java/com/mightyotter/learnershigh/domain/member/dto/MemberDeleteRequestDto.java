@@ -1,6 +1,6 @@
 package com.mightyotter.learnershigh.domain.member.dto;
 
-import com.mightyotter.learnershigh.domain.member.dao.Member;
+import com.mightyotter.learnershigh.domain.member.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

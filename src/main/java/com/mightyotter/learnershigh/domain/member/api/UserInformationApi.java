@@ -3,7 +3,7 @@ package com.mightyotter.learnershigh.domain.member.api;
 import java.util.Map;
 import java.util.HashMap;
 import com.mightyotter.learnershigh.domain.member.application.MemberService;
-import com.mightyotter.learnershigh.domain.member.dao.Member;
+import com.mightyotter.learnershigh.domain.member.domain.Member;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

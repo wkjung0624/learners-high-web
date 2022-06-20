@@ -1,7 +1,7 @@
-package com.mightyotter.learnershigh.domain.member.dao;
+package com.mightyotter.learnershigh.domain.member.domain;
 
-import com.mightyotter.learnershigh.global.common.entity.BaseTimeEntity;
-import com.mightyotter.learnershigh.global.config.Role;
+import com.mightyotter.learnershigh.domain.model.BaseTimeEntity;
+import com.mightyotter.learnershigh.domain.model.Role;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Builder // https://devfunny.tistory.com/337
 @NoArgsConstructor

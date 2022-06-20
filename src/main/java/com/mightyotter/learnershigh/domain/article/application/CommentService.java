@@ -1,15 +1,13 @@
 package com.mightyotter.learnershigh.domain.article.application;
 
-import com.mightyotter.learnershigh.domain.article.dao.Article;
+import com.mightyotter.learnershigh.domain.article.domain.Article;
 import com.mightyotter.learnershigh.domain.article.dao.ArticleRepository;
-import com.mightyotter.learnershigh.domain.article.dao.Comment;
+import com.mightyotter.learnershigh.domain.article.domain.Comment;
 import com.mightyotter.learnershigh.domain.article.dao.CommentRepository;
-import com.mightyotter.learnershigh.domain.article.dto.CommentEditDto;
 import com.mightyotter.learnershigh.domain.article.dto.CommentSaveDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @RequiredArgsConstructor

@@ -1,6 +1,6 @@
 package com.mightyotter.learnershigh.domain.article.application;
 
-import com.mightyotter.learnershigh.domain.article.dao.Article;
+import com.mightyotter.learnershigh.domain.article.domain.Article;
 import com.mightyotter.learnershigh.domain.article.dao.ArticleRepository;
 import com.mightyotter.learnershigh.domain.article.dto.ArticleSaveDto;
 import com.mightyotter.learnershigh.domain.article.dto.ArticleUpdateDto;

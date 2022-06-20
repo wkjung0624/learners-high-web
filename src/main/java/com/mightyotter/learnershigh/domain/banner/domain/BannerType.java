@@ -1,4 +1,4 @@
-package com.mightyotter.learnershigh.domain.banner.dao;
+package com.mightyotter.learnershigh.domain.banner.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

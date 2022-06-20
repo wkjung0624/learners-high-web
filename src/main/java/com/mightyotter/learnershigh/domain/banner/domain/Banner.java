@@ -1,6 +1,5 @@
-package com.mightyotter.learnershigh.domain.banner.dao;
+package com.mightyotter.learnershigh.domain.banner.domain;
 
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,20 +21,15 @@ public class Banner {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long bannerId;
-
-	// 배너 구분 (상단 : TOP, 메인 carusel : MAIN)
 	@Column
 	private String type;
-
 	// 배너 이미지 소스
 	@Column(columnDefinition = "TEXT", nullable = false)
 	private String bannerImageSourceUrl;
-
 	// 배너 클릭시 연결될 하이퍼링크
-	@Column(columnDefinition = "TEXT", nullable = false)
+	@Column
 	private String bannerHyperLinkReference;
-
-	// 배너 개제 예정일
+	// 배너 개제 예정일 (이부분을 BaseTimeEntity 같이 임플리먼테이션으로?)
 //	@Column
 //	private Date reservedDate;
 	// 배너 자동 비공개 전환 예정일

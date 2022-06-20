@@ -1,6 +1,6 @@
 package com.mightyotter.learnershigh.domain.member.application;
 
-import com.mightyotter.learnershigh.domain.member.dao.Member;
+import com.mightyotter.learnershigh.domain.member.domain.Member;
 import com.mightyotter.learnershigh.domain.member.dao.MemberRepository;
 import com.mightyotter.learnershigh.domain.member.dto.MemberDeleteRequestDto;
 import java.util.Date;

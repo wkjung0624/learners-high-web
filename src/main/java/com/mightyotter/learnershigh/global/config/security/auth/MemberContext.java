@@ -1,7 +1,7 @@
-package com.mightyotter.learnershigh.global.config.auth;
+package com.mightyotter.learnershigh.global.config.security.auth;
 
 
-import com.mightyotter.learnershigh.domain.member.dao.Member;
+import com.mightyotter.learnershigh.domain.member.domain.Member;
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;

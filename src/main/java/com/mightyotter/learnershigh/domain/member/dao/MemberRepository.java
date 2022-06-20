@@ -1,5 +1,6 @@
 package com.mightyotter.learnershigh.domain.member.dao;
 
+import com.mightyotter.learnershigh.domain.member.domain.Member;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

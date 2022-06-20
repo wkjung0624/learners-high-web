@@ -1,13 +1,13 @@
-package com.mightyotter.learnershigh.domain.article.dao;
+package com.mightyotter.learnershigh.domain.article.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mightyotter.learnershigh.global.common.entity.BaseTimeEntity;
+import com.mightyotter.learnershigh.domain.article.domain.Article;
+import com.mightyotter.learnershigh.domain.model.BaseTimeEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;

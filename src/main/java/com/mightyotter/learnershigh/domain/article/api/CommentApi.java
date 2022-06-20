@@ -1,7 +1,7 @@
 package com.mightyotter.learnershigh.domain.article.api;
 
 import com.mightyotter.learnershigh.domain.article.application.CommentService;
-import com.mightyotter.learnershigh.domain.article.dao.Comment;
+import com.mightyotter.learnershigh.domain.article.domain.Comment;
 import com.mightyotter.learnershigh.domain.article.dto.CommentSaveDto;
 import java.util.List;
 import lombok.AllArgsConstructor;

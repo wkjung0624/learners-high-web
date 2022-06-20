@@ -3,7 +3,7 @@ package com.mightyotter.learnershigh.domain.banner.api;
 import java.io.IOException;
 import java.util.List;
 import com.mightyotter.learnershigh.domain.banner.application.BannerService;
-import com.mightyotter.learnershigh.domain.banner.dao.Banner;
+import com.mightyotter.learnershigh.domain.banner.domain.Banner;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

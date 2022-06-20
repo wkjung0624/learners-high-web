@@ -1,6 +1,6 @@
 package com.mightyotter.learnershigh.domain.banner.application.impl;
 
-import com.mightyotter.learnershigh.domain.banner.dao.BannerType;
+import com.mightyotter.learnershigh.domain.banner.domain.BannerType;
 import com.mightyotter.learnershigh.global.util.FileExtensionValidationUtil;
 import com.mightyotter.learnershigh.global.util.FileUploadUtil;
 import java.io.FileNotFoundException;
@@ -10,7 +10,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.mightyotter.learnershigh.domain.banner.application.BannerService;
-import com.mightyotter.learnershigh.domain.banner.dao.Banner;
+import com.mightyotter.learnershigh.domain.banner.domain.Banner;
 import com.mightyotter.learnershigh.domain.banner.dao.BannerRepository;
 import org.springframework.web.multipart.MultipartFile;
 

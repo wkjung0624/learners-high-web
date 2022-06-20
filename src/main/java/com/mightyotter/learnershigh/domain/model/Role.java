@@ -1,4 +1,4 @@
-package com.mightyotter.learnershigh.global.config;
+package com.mightyotter.learnershigh.domain.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
