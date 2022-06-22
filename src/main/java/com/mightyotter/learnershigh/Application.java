@@ -8,10 +8,9 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableJpaAuditing
 @EnableRedisHttpSession
 @SpringBootApplication
-public class LearnersHighApplication {
-
+public class Application {
 	public static void main(String[] args) {
-		SpringApplication.run(LearnersHighApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
 
 }
