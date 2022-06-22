@@ -1,7 +1,7 @@
 package com.mightyotter.learnershigh.global.error;
 
 import com.mightyotter.learnershigh.domain.club.exception.DuplicatedClubNameException;
-import com.mightyotter.learnershigh.global.common.response.ErrorResponse;
+import com.mightyotter.learnershigh.global.common.response.ErrorResponseBody;
 import com.mightyotter.learnershigh.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +27,11 @@ public class GlobalExceptionHandler {
 
 	/* Club Exception Start*/
 	@ExceptionHandler(DuplicatedClubNameException.class)
-	protected ResponseEntity<ErrorResponse> duplicatedClubNameException (DuplicatedClubNameException e){
+	protected ResponseEntity<ErrorResponseBody> duplicatedClubNameException (DuplicatedClubNameException e){
 		ErrorCode errorCode = ErrorCode.DUPLICATE_RESOURCE;
 		return ResponseEntity
 			.status(errorCode.getHttpStatus())
-			.body(ErrorResponse.builder()
+			.body(ErrorResponseBody.builder()
 				.code(errorCode.getCode())
 				.message(errorCode.getMessage())
 				.detail(e.getMessage())

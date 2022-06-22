@@ -4,8 +4,11 @@ import com.mightyotter.learnershigh.domain.member.application.MemberService;
 import com.mightyotter.learnershigh.domain.member.domain.Member;
 import com.mightyotter.learnershigh.domain.member.dto.MemberCreateRequestDto;
 import com.mightyotter.learnershigh.domain.member.dto.MemberDeleteRequestDto;
+import com.mightyotter.learnershigh.global.common.response.StandardResponseBody;
+import com.mightyotter.learnershigh.global.common.response.data.DataLayer;
 import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,19 +30,23 @@ public class UserRegisterApi {
 
 	/** [√] 유저가 입력한 정보로 임시 회원가입 */
 	@PostMapping("/register")
-	public ResponseEntity<HashMap<String,String>> createUserAccount(@RequestBody MemberCreateRequestDto memberCreateRequestDto){
+	public ResponseEntity<StandardResponseBody> createUserAccount(@RequestBody MemberCreateRequestDto memberCreateRequestDto){
 		Member member = memberService.save(memberCreateRequestDto.toEntity());
 
 		HashMap<String,String> result = new HashMap<>();
 		if(member != null){
 			result.put("msg", "OK");
 			result.put("result", "OK");
-			return ResponseEntity.ok().body(result);
-		}
 
-		result.put("msg", "FALSE");
-		result.put("result", "FALSE");
-		return ResponseEntity.ok().body(result);
+			return ResponseEntity
+				.status(HttpStatus.CREATED)
+				.body(StandardResponseBody.builder()
+					.data(DataLayer.builder()
+						.status(true)
+						.build())
+					.build());
+		}
+		return null;
 	}
 
 	/** [√] 사용자 계정 삭제하기
@@ -48,14 +55,29 @@ public class UserRegisterApi {
 	 * 3. 30일 이후 배치 스크립트가 자동으로 '삭제된 계정 DB' 로 백업 후 '원본 DB'에서 삭제
 	 */
 	@PostMapping("/register/delete")
-	public ResponseEntity<Boolean> deleteUserAccount(@RequestBody MemberDeleteRequestDto memberDeleteRequestDto) {
-		return ResponseEntity.ok().body(memberService.delete(memberDeleteRequestDto));
+	public ResponseEntity<StandardResponseBody> deleteUserAccount(@RequestBody MemberDeleteRequestDto memberDeleteRequestDto) {
+		//return ResponseEntity.ok().body(memberService.delete(memberDeleteRequestDto));
+		return ResponseEntity
+			.status(HttpStatus.NO_CONTENT)
+			.body(StandardResponseBody.builder()
+				.data(DataLayer.builder()
+					.status(true)
+					.build())
+				.build());
 	}
 
 	/** [√] 회원 가입 전 아이디 중복 확인 */
 	@GetMapping("/register/id/duplicate")
-	public boolean checkIdDuplication(@RequestParam(required = true) String userId) {
-		return memberService.findOneByUsername(userId) != null;
+	public ResponseEntity<StandardResponseBody> checkIdDuplication(@RequestParam(required = true) String userId) {
+		//return memberService.findOneByUsername(userId) != null;
+
+		return ResponseEntity
+			.status(HttpStatus.OK)
+			.body(StandardResponseBody.builder()
+				.data(DataLayer.builder()
+					.status(true)
+					.build())
+				.build());
 	}
 
 	/** [√] 회원 가입 전 이메일 중복 확인
@@ -69,8 +91,16 @@ public class UserRegisterApi {
 	 * @return
 	 */
 	@GetMapping("/register/email/duplicate")
-	public boolean checkEmailDuplication(@RequestParam(required = true) String email) {
-		return memberService.findOneByEmail(email) != null;
+	public ResponseEntity<StandardResponseBody> checkEmailDuplication(@RequestParam(required = true) String email) {
+		//return memberService.findOneByEmail(email) != null;
+
+		return ResponseEntity
+			.status(HttpStatus.OK)
+			.body(StandardResponseBody.builder()
+				.data(DataLayer.builder()
+					.status(true)
+					.build())
+				.build());
 	}
 
 	/** [x] 회원 가입한 유저에게 이메일 인증 요청

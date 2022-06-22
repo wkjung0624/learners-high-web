@@ -1,9 +1,13 @@
 package com.mightyotter.learnershigh.domain.banner.api;
 
+import com.mightyotter.learnershigh.global.common.response.StandardResponseBody;
+import com.mightyotter.learnershigh.global.common.response.data.DataLayer;
 import java.io.IOException;
 import java.util.List;
 import com.mightyotter.learnershigh.domain.banner.application.BannerService;
 import com.mightyotter.learnershigh.domain.banner.domain.Banner;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,25 +28,59 @@ public class BannerApi {
 
 	// 배너 등록하기
 	@PostMapping("/banner")
-	public Long addBanner(
+	public ResponseEntity<StandardResponseBody> addBanner(
 		@RequestParam String type, @RequestPart MultipartFile bannerImageFile, @RequestPart(required = false) String bannerHyperLinkReference)
 		throws IllegalArgumentException, IOException {
-		return bannerService.addBanners(type, bannerImageFile, bannerHyperLinkReference);
+
+		bannerService.addBanners(type, bannerImageFile, bannerHyperLinkReference);
+
+		return ResponseEntity
+			.status(HttpStatus.CREATED)
+			.body(StandardResponseBody.builder()
+				.data(DataLayer.builder()
+					.status(true)
+					.build())
+				.build());
 	}
 	// 배너 정보 가져오기
 	@GetMapping("/banner")
-	public List<Banner> getAllBanners(@RequestParam String type){
-		return bannerService.getAllBanners(type);
+	public ResponseEntity<StandardResponseBody> getAllBanners(@RequestParam String type){
+
+		List<Banner> bannerList = bannerService.getAllBanners(type);
+
+		return ResponseEntity
+			.status(HttpStatus.OK)
+			.body(StandardResponseBody.builder()
+				.data(DataLayer.builder()
+					.items(bannerList)
+					.build())
+				.build());
 	}
 	// 배너 표시여부 변경
 	 @PostMapping("/banner/{bannerId}/visible")
-	 public void changeBannerVisible(@PathVariable Long bannerId, @RequestParam boolean flag){
+	 public ResponseEntity<StandardResponseBody> changeBannerVisible(@PathVariable Long bannerId, @RequestParam boolean flag){
 	     bannerService.changeBannerVisible(bannerId, flag);
+
+		 return ResponseEntity
+			 .status(HttpStatus.NO_CONTENT)
+			 .body(StandardResponseBody.builder()
+				 .data(DataLayer.builder()
+					 .status(true)
+					 .build())
+				 .build());
 	 }
 
 	// 배너 삭제하기
 	@PostMapping("/banner/{bannerId}/delete")
-	public void deleteBanner(@PathVariable Long bannerId){
+	public ResponseEntity<StandardResponseBody> deleteBanner(@PathVariable Long bannerId){
 		bannerService.deleteBanners(bannerId);
+
+		return ResponseEntity
+			.status(HttpStatus.NO_CONTENT)
+			.body(StandardResponseBody.builder()
+				.data(DataLayer.builder()
+					.status(false)
+					.build())
+				.build());
 	}
 }

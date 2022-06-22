@@ -1,5 +1,7 @@
 package com.mightyotter.learnershigh.domain.member.api;
 
+import com.mightyotter.learnershigh.global.common.response.StandardResponseBody;
+import com.mightyotter.learnershigh.global.common.response.data.DataLayer;
 import java.util.Map;
 import java.util.HashMap;
 import com.mightyotter.learnershigh.domain.member.application.MemberService;
@@ -9,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +32,7 @@ public class UserInformationApi {
 
 	/** [v] 사용자 로그인 */
 	@PostMapping("/user")
-	public Map<String, String> login(@RequestBody @Valid Map<String, String> requestBody, HttpServletRequest request) {
+	public ResponseEntity<StandardResponseBody> login(@RequestBody @Valid Map<String, String> requestBody, HttpServletRequest request) {
 		// x 최근(3분)에 아이디를 가져왔다면 Redis 캐쉬에 해당 정보를 저장하고
 		// x 비밀번호는 Redis 캐쉬 데이터에서 찾는것이 저비용으로 로그인이 가능한 방법일듯
 		// ㅇ 조건1. 로그아웃인 상태부터 확인
@@ -40,7 +44,8 @@ public class UserInformationApi {
 		if (memberService.hasAuthenticateInformation(session)) {
 			result.put("result","false");
 			result.put("msg","logout first");
-			return result;
+			return null;
+			// return result; >> throw exception logout first 처리,(그렇지만 로그아웃이 필요할까? 자동적으로 세션아웃 시켜주는건?)
 		}
 		else {
 			Member member = memberService.getUser(requestBody.get("username"), requestBody.get("password"));
@@ -49,7 +54,7 @@ public class UserInformationApi {
 				result.put("result","false");
 				result.put("msg","no matching");
 
-				return result;
+				// return result; >> throw exception nomatch 처리
 			}
 
 			session.setAttribute("username", member.getUsername());
@@ -64,16 +69,30 @@ public class UserInformationApi {
 			result.put("result", "ok");
 			result.put("msg", "hit");
 
-			return result;
+			return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(StandardResponseBody.builder()
+					.data(DataLayer.builder()
+						.status(true)
+						.build())
+					.build());
 		}
 	}
 	@GetMapping("/user/logout")
-	public String logout(HttpServletRequest request){
+	public ResponseEntity<StandardResponseBody> logout(HttpServletRequest request){
 		HttpSession session = request.getSession(false);
+
 		if(request.getSession() != null){
 			session.invalidate();
 		}
-		return "redirect:/";
+
+		return ResponseEntity
+			.status(HttpStatus.OK)
+			.body(StandardResponseBody.builder()
+				.data(DataLayer.builder()
+					.status(true)
+					.build())
+				.build());
 	}
 
 	/** [v] 회원 정보 수정 (이메일, 이름, 닉네임)
@@ -82,7 +101,7 @@ public class UserInformationApi {
 	 * Body : email, name, nickname
 	 * */
 	@PostMapping("/user/info/update")
-	public Map<String, String> updateUserInformation(@RequestBody @Valid Map<String, String> requestBody) {
+	public ResponseEntity<StandardResponseBody> updateUserInformation(@RequestBody @Valid Map<String, String> requestBody) {
 
 		Member member = memberService.findOneByUsername(requestBody.get("username"));
 
@@ -101,19 +120,26 @@ public class UserInformationApi {
 			}
 
 			memberService.save(member);
-			return result;
+
+			return ResponseEntity
+				.status(HttpStatus.NO_CONTENT)
+				.body(StandardResponseBody.builder()
+					.data(DataLayer.builder()
+						.status(true)
+						.build())
+					.build());
 		}
 
 		result.put("result","false");
 		result.put("msg","no match");
-		return result;
+		return null;
 	}
 
 	/** 사용자 계정 찾기
 	 * 계정 찾기 이름과 주민번호를 이용하는건 X (고유식별정보 처리 근거가 부족함) 메일에 확인 클릭 시 비밀번호 초기화가 가능함 비밀번호를 직접적으로 알려주는건 X
 	 */
 	@PostMapping("/user/id/find")
-	public Map<String, Object> findUserAccount(@RequestParam String email) {
+	public ResponseEntity<StandardResponseBody> findUserAccount(@RequestParam String email) {
 
 		Map<String, Object> result = new HashMap<>();
 		Member member = memberService.findOneByEmail(email);
@@ -126,7 +152,13 @@ public class UserInformationApi {
 			result.put("ERR_CODE", "DEV-ERO-1");
 		}
 		// @RequestParam 말고 @RequestBody 로 변경하기;
-		return result;
+		return ResponseEntity
+			.status(HttpStatus.OK)
+			.body(StandardResponseBody.builder()
+				.data(DataLayer.builder()
+					.status(true)
+					.build())
+				.build());
 
 		// TODO: 해당 이메일로 아이디 정보와 비밀번호 초기화 링크를 보내는 기능 추가 필요
 		// TODO: 최상위 ResponseDto 클래스를 만들고 그 안에 제네릭클래스를 만들어서 사용하는건? 성공시 정상 DTO 매핑, 실패시 Excepion DTO 매핑
@@ -145,7 +177,7 @@ public class UserInformationApi {
 		// "에러페이지로 이동할 링크로 리다이렉트"
 	 */
 	@PostMapping("/user/password/{key}/reset/send")
-	public Map<String, Object> resetUserPassword(@PathVariable String key, @RequestBody Map<String, String> requestBody) {
+	public ResponseEntity<StandardResponseBody> resetUserPassword(@PathVariable String key, @RequestBody Map<String, String> requestBody) {
 		Map<String, Object> result = new HashMap<>();
 
 		// TODO : 해당 API 주소에 무작위 조회를 막기위해 Limit 을 사용함
@@ -168,10 +200,16 @@ public class UserInformationApi {
 			result.put("data", "changed passwd:" + requestBody.get("password"));
 			memberService.changePassword(username, requestBody.get("password"));
 
-			return result;
+			return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(StandardResponseBody.builder()
+					.data(DataLayer.builder()
+						.status(true)
+						.build())
+					.build());
 		}
 
-		return result;
+		return null;
 	}
 
 	/**
@@ -181,7 +219,7 @@ public class UserInformationApi {
 	 */
 	// 인덱스 "/user/password/update/send"
 	@PostMapping("/user/password/update/send")
-	public Map<String, String> updateUserPassword(@RequestBody Map<String, String> requestBody){
+	public ResponseEntity<StandardResponseBody> updateUserPassword(@RequestBody Map<String, String> requestBody){
 
 		Member member = memberService.getUser(requestBody.get("username"), requestBody.get("password"));
 
@@ -191,9 +229,15 @@ public class UserInformationApi {
 			member.setPassword(requestBody.get("changePassword"));
 
 			result.put("result", "true");
-			return result;
+			return ResponseEntity
+				.status(HttpStatus.NO_CONTENT)
+				.body(StandardResponseBody.builder()
+					.data(DataLayer.builder()
+						.status(true)
+						.build())
+					.build());
 		}
 		result.put("result", "false");
-		return result;
+		return null;
 	}
 }
