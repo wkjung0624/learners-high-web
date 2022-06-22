@@ -1,8 +1,8 @@
 package com.mightyotter.learnershigh.domain.member.application;
 
-import com.mightyotter.learnershigh.domain.member.dao.Member;
+import com.mightyotter.learnershigh.domain.member.domain.Member;
 import com.mightyotter.learnershigh.domain.member.dao.MemberRepository;
-import com.mightyotter.learnershigh.global.config.auth.MemberContext;
+import com.mightyotter.learnershigh.global.config.security.auth.MemberContext;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

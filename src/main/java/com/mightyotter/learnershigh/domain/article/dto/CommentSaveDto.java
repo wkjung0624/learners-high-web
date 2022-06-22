@@ -1,7 +1,6 @@
 package com.mightyotter.learnershigh.domain.article.dto;
 
-import com.mightyotter.learnershigh.domain.article.dao.Article;
-import com.mightyotter.learnershigh.domain.article.dao.Comment;
+import com.mightyotter.learnershigh.domain.article.domain.Comment;
 
 import lombok.Getter;
 import lombok.Setter;

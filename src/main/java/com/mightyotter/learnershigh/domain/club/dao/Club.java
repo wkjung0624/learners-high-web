@@ -1,6 +1,6 @@
 package com.mightyotter.learnershigh.domain.club.dao;
 
-import com.mightyotter.learnershigh.global.common.entity.BaseTimeEntity;
+import com.mightyotter.learnershigh.domain.model.BaseTimeEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

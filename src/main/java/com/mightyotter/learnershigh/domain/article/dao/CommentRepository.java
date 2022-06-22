@@ -1,10 +1,9 @@
 package com.mightyotter.learnershigh.domain.article.dao;
 
-import io.lettuce.core.dynamic.annotation.Param;
+import com.mightyotter.learnershigh.domain.article.domain.Article;
+import com.mightyotter.learnershigh.domain.article.domain.Comment;
 import java.util.List;
-import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
