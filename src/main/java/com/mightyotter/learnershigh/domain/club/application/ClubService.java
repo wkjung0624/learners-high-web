@@ -1,6 +1,6 @@
 package com.mightyotter.learnershigh.domain.club.application;
 
-import com.mightyotter.learnershigh.domain.club.dao.Club;
+import com.mightyotter.learnershigh.domain.club.domain.Club;
 import com.mightyotter.learnershigh.domain.club.dto.ClubCreateRequestDto;
 import com.mightyotter.learnershigh.domain.club.dto.ClubUpdateRequestDto;
 import com.mightyotter.learnershigh.domain.club.exception.DuplicatedClubNameException;

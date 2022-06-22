@@ -1,6 +1,6 @@
 package com.mightyotter.learnershigh.domain.club.dto;
 
-import com.mightyotter.learnershigh.domain.club.dao.Club;
+import com.mightyotter.learnershigh.domain.club.domain.Club;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;

@@ -1,6 +1,6 @@
-package com.mightyotter.learnershigh.domain.club.dao;
+package com.mightyotter.learnershigh.domain.club.domain;
 
-import com.mightyotter.learnershigh.domain.member.dao.Member;
+import com.mightyotter.learnershigh.domain.member.domain.Member;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -1,7 +1,7 @@
 package com.mightyotter.learnershigh.domain.club.application.impl;
 
 import com.mightyotter.learnershigh.domain.club.application.ClubService;
-import com.mightyotter.learnershigh.domain.club.dao.Club;
+import com.mightyotter.learnershigh.domain.club.domain.Club;
 import com.mightyotter.learnershigh.domain.club.dao.ClubRepository;
 import com.mightyotter.learnershigh.domain.club.dto.ClubCreateRequestDto;
 import com.mightyotter.learnershigh.domain.club.dto.ClubUpdateRequestDto;
@@ -16,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 @Service

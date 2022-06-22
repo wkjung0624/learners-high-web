@@ -1,4 +1,4 @@
-package com.mightyotter.learnershigh.domain.club.dao;
+package com.mightyotter.learnershigh.domain.club.domain;
 
 import com.mightyotter.learnershigh.domain.model.BaseTimeEntity;
 import javax.persistence.Column;

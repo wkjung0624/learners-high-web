@@ -1,6 +1,6 @@
 package com.mightyotter.learnershigh.domain.club.dto;
 
-import com.mightyotter.learnershigh.domain.club.dao.Club;;
+import com.mightyotter.learnershigh.domain.club.domain.Club;;
 import org.springframework.web.multipart.MultipartFile;
 import lombok.Data;
 // javax.validation annotaion 문서 : https://jakarta.ee/specifications/bean-validation/3.0/jakarta-bean-validation-spec-3.0.html
