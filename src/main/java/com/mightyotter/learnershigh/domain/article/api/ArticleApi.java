@@ -4,6 +4,8 @@ import com.mightyotter.learnershigh.domain.article.application.ArticleService;
 import com.mightyotter.learnershigh.domain.article.domain.Article;
 import com.mightyotter.learnershigh.domain.article.dto.ArticleSaveDto;
 import com.mightyotter.learnershigh.domain.article.dto.ArticleUpdateDto;
+import com.mightyotter.learnershigh.global.common.response.StandardResponseBody;
+import com.mightyotter.learnershigh.global.common.response.data.DataLayer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -33,16 +35,27 @@ public class ArticleApi {
 	 * 게시글 작성
 	 */
 	@PostMapping("/article")
-	public Long createArticle(HttpServletRequest request, @RequestBody ArticleSaveDto articleSaveDto) {
+	public ResponseEntity<StandardResponseBody> createArticle(HttpServletRequest request, @RequestBody ArticleSaveDto articleSaveDto) {
 		HttpSession session =  request.getSession();
 		articleSaveDto.setAuthorId(session.getAttribute("username").toString());
 
-		return articleService.save(articleSaveDto).getArticleId();
+		articleService.save(articleSaveDto);
+
+		return ResponseEntity
+			.status(HttpStatus.CREATED)
+			.body(
+				StandardResponseBody.builder()
+					.data(
+						DataLayer.builder()
+							.items(articleSaveDto)
+							.build()
+					).build()
+			);
 	}
-//
-//	/**
-//	 * 글 목록 조회
-//	 */
+
+	/**
+	 * 글 목록 조회
+	 */
 	@GetMapping("/article")
 	public ResponseEntity<Page<Article>> getArticles(/*@PageableDefault(size=10, sort="")*/Pageable page) {
 		Page<Article> articlePage = articleService.getArticleList(page);
@@ -53,25 +66,59 @@ public class ArticleApi {
 	 * 특정 글 내용 가져오기
 	 */
 	@GetMapping("/article/{id}")
-	public Article getArticleContent(@PathVariable Long id) {
-		return articleService.getArticle(id);
+	public ResponseEntity<StandardResponseBody> getArticleContent(@PathVariable Long id) {
+		// 예외 처리 필요 - 권한확인불가, 인증확인불가, 아티클확인불가 등
+		Article article = articleService.getArticle(id);
+
+		return ResponseEntity
+			.status(HttpStatus.OK)
+			.body(
+				StandardResponseBody.builder()
+					.data(
+						DataLayer.builder()
+							.items(article)
+							.build())
+					.build()
+			);
 	}
 
 	/**
 	 * 특정 글 수정
 	 */
 	@PostMapping("/article/{id}/update")
-	public void updateArticle(@PathVariable Long id, @RequestBody ArticleUpdateDto articleUpdateDto) {
-		/*..*/
+	public ResponseEntity<StandardResponseBody> updateArticle(@PathVariable Long id, @RequestBody ArticleUpdateDto articleUpdateDto) {
+		// 예외 처리 필요 - 권한확인불가, 인증확인불가, 아티클확인불가 등
 		articleService.updateArticle(id, articleUpdateDto);
+		return ResponseEntity
+			.status(HttpStatus.NO_CONTENT)
+			.body(
+				StandardResponseBody.builder()
+					.data(
+						DataLayer.builder()
+							.status(true)
+							.build())
+					.build()
+			);
 	}
 
 	/**
 	 * 작성한 글 삭제
 	 */
 	@PostMapping("/article/{id}/delete")
-	public void deleteArticle(@PathVariable Long id) {
+	public ResponseEntity<StandardResponseBody> deleteArticle(@PathVariable Long id) {
+		// 예외 처리 필요 - 권한확인불가, 인증확인불가, 아티클확인불가 등
 		articleService.deleteArticle(id);
+		return ResponseEntity
+			.status(HttpStatus.NO_CONTENT)
+			.body(
+				StandardResponseBody.builder()
+					.data(
+						DataLayer.builder()
+							.status(true)
+							.build())
+					.build()
+			);
+		//
 	}
 }
 
