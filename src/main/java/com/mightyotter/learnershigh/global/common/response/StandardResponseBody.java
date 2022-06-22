@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 // null 값은 반환하지 않도록 하는 방법 - @JsonInclude(Include.NON_NULL) : https://stackoverflow.com/questions/64868946/how-to-not-return-null-value-in-responseentity
 // final 은 내부적으로 어떻게 동작하며, 메모리 관리는 어떻게 이루어지는가?
-public class DefaultResponseBody{
+public class StandardResponseBody {
 	private final String apiVersion; // 현재 API 의 버전, 예) "apiVersion" : "1.0"
 	private final String context; // 클라이언트에서 변경할 부분을 지정해주는 값
 	private final Long id;
