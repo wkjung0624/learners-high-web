@@ -5,10 +5,9 @@ import com.mightyotter.learnershigh.domain.club.dao.Club;
 import com.mightyotter.learnershigh.domain.club.dto.ClubCreateRequestDto;
 import com.mightyotter.learnershigh.domain.club.dto.ClubUpdateRequestDto;
 import com.mightyotter.learnershigh.domain.club.exception.DuplicatedClubNameException;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import lombok.RequiredArgsConstructor;
+import com.mightyotter.learnershigh.global.common.response.StandardResponseBody;
+import com.mightyotter.learnershigh.global.common.response.data.DataLayer;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
+import java.util.Map;
+import java.io.IOException;
 
 @CrossOrigin
 @RestController
@@ -30,36 +32,100 @@ public class ClubApi {
 	// x - multipart 와 dto 객체를 동시에 쓰고싶을때는? : https://myunji.tistory.com/488
 	// dto 에서 multipart 를 같이 받아오고싶을때는 ? : https://pooney.tistory.com/10
 	@PostMapping("/club")
-	public Long createClub(ClubCreateRequestDto clubCreateRequestDto) throws DuplicatedClubNameException, IOException, NullPointerException {
-		return clubServiceImpl.createClub(clubCreateRequestDto);
+	public ResponseEntity<StandardResponseBody> createClub(ClubCreateRequestDto clubCreateRequestDto) throws DuplicatedClubNameException, IOException, NullPointerException {
+		clubServiceImpl.createClub(clubCreateRequestDto);
+		return ResponseEntity
+			.status(HttpStatus.CREATED)
+			.body(StandardResponseBody.builder()
+				.data(DataLayer.builder()
+					.status(true)
+					.build())
+				.build());
 	}
+
+	// ResponseEntity 에 제네릭 파라미터를 지정해주지 않는다면 어떤 문제가 발생하는가?
 	@GetMapping("/club")
-	public ResponseEntity<List<Club>> getClubList() {
-		return ResponseEntity.ok(clubServiceImpl.getClubList());
+	public ResponseEntity<StandardResponseBody> getClubList() {
+		return ResponseEntity
+			.status(HttpStatus.OK)
+			.body(
+				StandardResponseBody.builder()
+					.apiVersion("0.1")
+					.context("club")
+					.id(0L)
+					.data(
+						DataLayer.builder()
+							.items(clubServiceImpl.getClubList())
+							.build())
+					.build());
+
 	}
+
 	@GetMapping("/club/{clubId}")
-	public ResponseEntity<Club> getClubDetail(@PathVariable Long clubId) {
-		return ResponseEntity.ok(clubServiceImpl.getClubDetail(clubId));
+	public ResponseEntity<StandardResponseBody> getClubDetail(@PathVariable Long clubId) {
+		Club club = clubServiceImpl.getClubDetail(clubId);
+
+		return ResponseEntity
+			.status(HttpStatus.OK)
+			.body(
+				StandardResponseBody.builder()
+					.data(
+						DataLayer.builder()
+							.items(club)
+							.build())
+					.build());
 	}
 
 	@GetMapping("/club/{clubId}/enter")
-	public void enterClub(@PathVariable Long clubId, @RequestParam(required=false) String password) {
- 		clubServiceImpl.enterClub(clubId, password);
+	public ResponseEntity<StandardResponseBody> enterClub(@PathVariable Long clubId, @RequestParam(required=false) String password) {
+		clubServiceImpl.enterClub(clubId, password); // bool 형태로 리턴해줘야 할 듯
+		return ResponseEntity
+			.status(HttpStatus.OK)
+			.body(
+				StandardResponseBody.builder()
+					.data(
+						DataLayer.builder()
+							.status(true)
+							.build())
+					.build());
  	}
 
 	@PostMapping("/club/{clubId}/update")
-	public Club updateClubInfo(@PathVariable Long clubId, ClubUpdateRequestDto clubUpdateRequestDto) {
-		return clubServiceImpl.updateClubInfo(clubId, clubUpdateRequestDto);
+	public ResponseEntity<StandardResponseBody> updateClubInfo(@PathVariable Long clubId, ClubUpdateRequestDto clubUpdateRequestDto) {
+		clubServiceImpl.updateClubInfo(clubId, clubUpdateRequestDto);
+		return ResponseEntity
+			.status(HttpStatus.NO_CONTENT)
+			.body(
+				StandardResponseBody.builder()
+					.data(DataLayer.builder()
+						.status(true)
+						.build())
+					.build());
 	}
 
-	@PostMapping("/club/{clubId}/delegate")
-	public boolean delegateClubMasterPrivileges(@PathVariable Long clubId, @RequestBody Map<String, String> requestBody) {
-		return clubServiceImpl.delegateClubMasterPrivileges(clubId, requestBody.get("delegatedUsername"));
+	@PostMapping("/club/{clubId}/delegate")// ?delegatedUsername="username"
+	public ResponseEntity<StandardResponseBody> delegateClubMasterPrivileges(@PathVariable Long clubId, @RequestBody Map<String, String> requestBody) {
+		clubServiceImpl.delegateClubMasterPrivileges(clubId, requestBody.get("delegatedUsername"));
+		// bool 형태로 리턴처리, 예외처리-유효하지않은클럽id,인가되지않은 클럽접근, 인가되지않은 변경권한, 자신을지정함, 유저찾기실패 등
+		return ResponseEntity
+			.status(HttpStatus.OK)
+			.body(StandardResponseBody.builder()
+				.data(DataLayer.builder()
+					.status(true)
+					.build())
+				.build());
 	}
 
 	@PostMapping("/club/{clubId}/delete")
-	public void deleteClub(@PathVariable Long clubId) {
+	public ResponseEntity<StandardResponseBody> deleteClub(@PathVariable Long clubId) {
 		clubServiceImpl.deleteClub(clubId);
+		return ResponseEntity
+			.status(HttpStatus.NO_CONTENT)
+			.body(StandardResponseBody.builder()
+				.data(DataLayer.builder()
+					.status(true)
+					.build())
+				.build());
 	}
 //
 //	@GetMapping("/club/{clubId}/channel")
