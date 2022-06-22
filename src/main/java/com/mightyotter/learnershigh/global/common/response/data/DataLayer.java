@@ -15,7 +15,6 @@ public final class DataLayer {
 	private final String etag;
 	private final String id;
 	private final String lang;
-	private final String updated; // date formatted RFC 3339
-	private final Boolean deleted;
+	private final Boolean status;
 	private final Object items;
 }
