@@ -1,13 +1,11 @@
 package com.learnershigh.api.domain.club.domain;
 
-import com.learnershigh.api.domain.member.domain.Member;
 import com.learnershigh.api.domain.model.BaseTimeEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.AllArgsConstructor;
@@ -22,10 +20,6 @@ public class Club extends BaseTimeEntity {
 	@Id	@Column(name = "CLUB_ID")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long clubId;
-
-	// 최초 생성자 ID 또는 마스터 권한 위임자(Member 클래스로 매핑 필요)
-	@ManyToOne
-	private Member master;
 
 	// 클럽명
 	@Column(nullable = false)
@@ -51,11 +45,11 @@ public class Club extends BaseTimeEntity {
 	@Column
 	private int maximumUserCount;
 
-	// 외부 공개 여부
+	// 외부 검색가능 여부
 	@Column(nullable = false)
 	private boolean visible;
 
-	// 삭제 여부
+	// 클럽 삭제 여부
 	@Column
 	private boolean deleted;
 
