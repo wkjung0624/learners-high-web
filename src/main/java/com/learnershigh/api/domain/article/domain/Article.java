@@ -1,5 +1,6 @@
 package com.learnershigh.api.domain.article.domain;
 
+import com.learnershigh.api.domain.club.domain.Channel;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -7,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,6 +60,10 @@ public class Article {
 	// 공개, 비공개, 비밀번호 보호, 삭제
 	@Column
 	private short isVisible;
+
+	// 해당 글이 작성된 채널, 유저가 해당 채널에 글쓰기 권한을 가졌는지 유효성 검증 필요
+	@ManyToOne
+	private Channel channel;
 
 	/* OneToMany, addComment 까지의 동작방법 공부 필요 */
 	@OneToMany(mappedBy="article",  cascade = CascadeType.ALL)
