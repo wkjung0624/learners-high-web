@@ -9,12 +9,14 @@ import javax.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Club extends BaseTimeEntity {
 	@Id	@Column(name = "CLUB_ID")
