@@ -13,11 +13,13 @@ import javax.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 @Builder // https://devfunny.tistory.com/337
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 //@Data //(@Getter 와 @Setter 를 합친 것 )
