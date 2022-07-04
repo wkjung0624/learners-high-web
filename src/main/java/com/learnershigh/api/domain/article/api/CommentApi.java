@@ -1,4 +1,4 @@
-package com.learnershigh.api.domain.article.controller;
+package com.learnershigh.api.domain.article.api;
 
 import com.learnershigh.api.domain.article.domain.Comment;
 import com.learnershigh.api.domain.article.dto.CommentSaveDto;
