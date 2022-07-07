@@ -8,6 +8,7 @@ import java.util.List;
 import com.learnershigh.api.domain.banner.application.BannerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v1")
+@Secured("ROLE_MANAGER") // 권한이 'ROLE_MANAGER' 이상만 API 메소드에 접근 가능하도록 설정
 public class BannerApi {
 	public final BannerService bannerService;
 
